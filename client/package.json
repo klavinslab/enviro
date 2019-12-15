@@ -1,0 +1,16 @@
+{
+  "name": "enviro-client",
+  "version": "0.0.1",
+  "description": "A client for the enviro 2D agent simulator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eric Klavins",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2"
+  }
+}
