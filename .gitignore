@@ -4,3 +4,4 @@ bin/enviro
 todo.txt
 sandbox/
 client/node_modules
+client/*.js
