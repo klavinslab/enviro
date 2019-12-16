@@ -21,6 +21,17 @@ namespace enviro {
         public:
         Agent(std::string name, World& world);
         ~Agent();
+
+        void init() {}
+        void start() {}
+        void update() {}
+        void stop() {}
+
+        virtual void initialize() = 0;
+        virtual void step() = 0;
+
+        Agent& apply_force(int index, cpFloat magnitude);
+
         json serialize();
         cpBody *body;
         cpShape *shape;

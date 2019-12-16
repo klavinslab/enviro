@@ -1,0 +1,16 @@
+{
+
+    "name": "Robot World",
+
+    "agents": [
+        {
+            "type": "defs/diff_drive.json",
+            "position": [ 0, 0, 0 ]
+        },
+        {
+            "type": "defs/diff_drive.json", 
+            "position": [ -5, 6, 1.57 ]
+        }
+    ]
+
+}

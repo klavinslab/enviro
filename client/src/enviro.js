@@ -7,7 +7,7 @@ class MyComponent extends React.Component {
     super(props);
     this.state = {
       error: null,
-      isLoaded: false,
+      isLoaded: false, 
       items: []
     };
   }
