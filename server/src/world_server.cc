@@ -21,7 +21,11 @@ namespace enviro {
 
     void WorldServer::run() {
         server.listen(ip, port);
-    }    
+    }  
+
+    void WorldServer::stop() {
+        server.stop();
+    }       
 
     void WorldServer::get_state(const Request& req, Response& res) {
 

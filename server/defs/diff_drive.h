@@ -3,20 +3,18 @@
 
 #include "enviro.h"
 
-namespace enviro {
+using namespace enviro;
 
-    class World;
+class DiffDrive : public Agent {
 
-    class DiffDrive : public Agent {
+    public:
+    DiffDrive(std::string name, World& world);
 
-        public:
-        DiffDrive(std::string name, World& world);
+    void initialize();
+    void step();
 
-        void initialize();
-        void step();
+};
 
-    };
-
-}
+DECLARE_INTERFACE(DiffDrive);
 
 #endif

@@ -1,14 +1,14 @@
 #ifndef __ENVIRO_SERVER__H
 #define __ENVIRO_SERVER__H
 
-#include "httplib/httplib.h"
-#include "json/json.h"
 #include <iostream>
 #include <ctime>
 #include <map>
 #include <string>
 #include <mutex>
 
+#include "httplib/httplib.h"
+#include "json/json.h"
 #include "agent.h"
 #include "world.h"
 
@@ -25,6 +25,7 @@ namespace enviro {
         public:
         WorldServer(World& world, std::mutex& mutex, const char* ip, int port);
         void run();
+        void stop();
         void get_state(const Request& req, Response& res);
 
         private:

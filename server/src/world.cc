@@ -27,46 +27,17 @@ namespace enviro {
 
         for ( auto agent_specification : config["agents"] ) {
 
-            std::cout << agent_specification["type"] << "\n";
-
-            std::ifstream ifs(agent_specification["type"]);
-            if ( ifs.fail() ) {
-                std::cerr << "Could not open agent definition file " 
-                        << agent_specification["type"]
-                        << "\n";
-                throw std::runtime_error("file error");
-            }        
-
-            json spec;
-            ifs >> spec;            
-
-            auto file = spec["controller"].get<std::string>().c_str();
-            std::cout << file << "\n";
-            auto handle = dlopen(file , RTLD_LAZY);
-            if (!handle) {
-                std::cerr << "Cannot open library " << dlerror() << '\n';
-                throw std::runtime_error("dll error");
-            }
-            Agent* (*create_agent)(std::string, World&);
-            void (*destroy_agent)(Agent*);
-            std::cout << "A\n";
-            create_agent = (Agent* (*)(std::string, World&))dlsym(handle, "create_agent");
-            std::cout << "B\n";
-            destroy_agent = (void (*)(Agent*))dlsym(handle, "destroy_agent");
-            std::cout << "C\n";              
-            auto agent_ptr = (Agent*) create_agent("asd", *this);
-            std::cout << "D\n";
+            auto agent_ptr = CreateAgent(agent_specification, *this);
             add_agent(*agent_ptr);
-            std::cout << "E\n";
+
         }
 
     }
 
     World::~World() {
         cpSpaceFree(space);
-        // delete all agents
         for ( auto agent_ptr : agents ) {
-            delete agent_ptr;
+            agent_ptr->_destroyer(agent_ptr);
         }
     }
 

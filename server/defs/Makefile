@@ -21,7 +21,8 @@ INCLUDE		:= -I../include -I$(ELMADIR)/include -I $(CHIPDIR)/include/chipmunk
 
 TARGETDIR	 := .
 SOURCES      := $(wildcard *.cc)
-TARGETS		 := $(patsubst %.cc,%,$(wildcard *.cc))
+HEADERS      := $(wildcard *.h)
+TARGETS		 := $(patsubst %.cc,%.so,$(wildcard *.cc))
 FULL_TARGETS := $(addprefix $(TARGETDIR)/, $(TARGETS))
 
 #Default Make
@@ -32,6 +33,6 @@ clean:
 	@$(RM) -rf $(TARGETS)
 
 # Compile
-$(TARGETDIR)/%: %.cc %.h
-	$(CC) $(CFLAGS) $(INCLUDE) $< $(LIBDIR) $(LIB) -o $@.so
+$(TARGETDIR)/%.so: %.cc %.h
+	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
 

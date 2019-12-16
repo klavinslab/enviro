@@ -1,0 +1,12 @@
+{
+    "name": "Block",
+    "description": "Inanimate Block",
+    "shape": [
+        [-1.0, 1.0],
+        [1.0,1.0],
+        [1.0,-1.0],
+        [-1.0,-1.0]
+    ],
+    "inputs": [],
+    "controller": "block.so"
+}

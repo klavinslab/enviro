@@ -8,6 +8,17 @@
 #include "chipmunk.h"
 #include "world.h"
 
+#define AGENT_CREATE_TYPE (Agent* (*)(std::string, World&))
+#define AGENT_DESTROY_TYPE (void (*)(Agent*))
+
+#define DECLARE_INTERFACE(__CLASS_NAME__)                                         \
+extern "C" __CLASS_NAME__* create_agent(std::string name, enviro::World& world) { \
+    return new __CLASS_NAME__(name, world);                                       \
+}                                                                                 \
+extern "C" void destroy_agent( __CLASS_NAME__* object ) {                         \
+    delete object;                                                                \
+}
+
 using namespace std::chrono;
 using namespace elma;
 using nlohmann::json; 
@@ -17,6 +28,8 @@ namespace enviro {
     class World;
 
     class Agent : public Process {
+
+        friend class World;
 
         public:
         Agent(std::string name, World& world);
@@ -33,10 +46,18 @@ namespace enviro {
         Agent& apply_force(int index, cpFloat magnitude);
 
         json serialize();
-        cpBody *body;
-        cpShape *shape;
 
-    };
+        inline void set_destroyer(void (*f)(Agent*)) { _destroyer = f; }
+
+        private:
+        cpBody * _body;
+        cpShape * _shape;
+        void (* _destroyer)(Agent*);
+
+    };    
+
+    // Factory method
+    Agent * CreateAgent(json specification, World& world);
 
 }
 

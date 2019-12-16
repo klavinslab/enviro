@@ -16,7 +16,7 @@ ELMADIR     := /development/elma
 
 #Flags, Libraries and Includes
 CFLAGS      := -ggdb -export-dynamic
-LIB         := -lgtest -lpthread -lelma -lchipmunk -lssl -lcrypto -ldl
+LIB         := -lgtest -lpthread -lelma -lchipmunk -ldl #  -lssl -lcrypto 
 INC         := -I $(INCDIR) -I $(CHIPDIR)/include/chipmunk -I $(ELMADIR)/include
 LIBDIR      := -L $(CHIPDIR)/build/src -L $(ELMADIR)/lib
 INCDEP      := -I$(INCDIR)/build/src/ $(CHIPDIR)/
