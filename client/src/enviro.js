@@ -42,7 +42,7 @@ class MyComponent extends React.Component {
       return <div>Loading...</div>;
     } else {
       const agent_list = data.agents.map(agent => 
-        <li key={agent.id}>({agent.x}, {agent.y})</li>
+        <li key={agent.id}>({agent.id}, {agent.x}, {agent.y})</li>
       )
       return (
         <ul>
