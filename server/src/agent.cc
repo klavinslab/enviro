@@ -3,13 +3,16 @@
 
 namespace enviro {
 
+    static int _next_id = 0;
+
     Agent::Agent(std::string name, World& world) : Process(name) {
         cpSpace * space = world.get_space();
         cpFloat moment = cpMomentForCircle(1, 0, 5, cpvzero);            
         _body = cpSpaceAddBody(space, cpBodyNew(1, moment));
         cpBodySetPosition(_body, cpv(0, 15));
         _shape = cpSpaceAddShape(space, cpCircleShapeNew(_body, 5, cpvzero));
-        cpShapeSetFriction(_shape, 0.7);         
+        cpShapeSetFriction(_shape, 0.7);
+        _id = _next_id++;     
     }
 
     Agent::~Agent() {
@@ -21,9 +24,9 @@ namespace enviro {
         cpVect pos = cpBodyGetPosition(_body);
         cpVect vel = cpBodyGetVelocity(_body);
         return {
-            {"id", 0}, // todo: give agents ids
+            {"id", get_id()}, 
             {"x", pos.x},
-            {"y",pos.y},
+            {"y", pos.y},
             {"dx", vel.x},
             {"dy", vel.y}
         };            

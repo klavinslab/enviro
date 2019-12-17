@@ -33,6 +33,6 @@ clean:
 	@$(RM) -rf $(TARGETS)
 
 # Compile
-$(TARGETDIR)/%.so: %.cc %.h
+$(TARGETDIR)/%.so: %.cc %.h ../include/*.h
 	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
 

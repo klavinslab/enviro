@@ -44,17 +44,17 @@ namespace enviro {
         virtual void step() = 0;
 
         Agent& apply_force(int index, cpFloat magnitude);
-
         json serialize();
-
         inline void set_destroyer(void (*f)(Agent*)) { _destroyer = f; }
+        inline int get_id() { return _id; }
 
         private:
         cpBody * _body;
         cpShape * _shape;
         void (* _destroyer)(Agent*);
+        int _id;
 
-    };    
+    };
 
     // Factory method
     Agent * CreateAgent(json specification, World& world);
