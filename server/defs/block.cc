@@ -3,7 +3,7 @@
 
 using namespace enviro;
 
-Block::Block(std::string name, World& world) : Agent(name,world) {
+Block::Block(json spec, World& world) : Agent(spec,world) {
     std::cout << "Constructed a Block Agent\n";
 }
 

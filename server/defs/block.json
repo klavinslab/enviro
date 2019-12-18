@@ -2,11 +2,13 @@
     "name": "Block",
     "description": "Inanimate Block",
     "shape": [
-        [-1.0, 1.0],
-        [1.0,1.0],
-        [1.0,-1.0],
-        [-1.0,-1.0]
+        [-10, 10],
+        [10,10],
+        [10,-10],
+        [-10,-10]
     ],
+    "friction": 10,
+    "mass": 10,    
     "inputs": [],
     "controller": "block.so"
 }

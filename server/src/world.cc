@@ -25,9 +25,10 @@ namespace enviro {
         std::cout << "name = " << config["name"] << "\n";
         set_name(config["name"]);
 
-        for ( auto agent_specification : config["agents"] ) {
+        for ( auto agent_entry : config["agents"] ) {
 
-            auto agent_ptr = CreateAgent(agent_specification, *this);
+            json spec = Agent::build_specification(agent_entry);
+            auto agent_ptr = Agent::create_from_specification(spec, *this);
             add_agent(*agent_ptr);
 
         }

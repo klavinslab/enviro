@@ -4,16 +4,28 @@
 
     "agents": [
         {
-            "type": "defs/diff_drive.json",
-            "position": [ 0, 0, 0 ]
+            "definition": "defs/diff_drive.json",
+            "position": {
+                "x": 50, 
+                "y": 50, 
+                "theta": 0
+            }
         },
         {
-            "type": "defs/diff_drive.json", 
-            "position": [ -5, 6, 1.57 ]
+            "definition": "defs/diff_drive.json", 
+            "position": {
+                "x": 150, 
+                "y": 100, 
+                "theta": 1.57
+            }
         },
         {
-            "type": "defs/block.json", 
-            "position": [ -5, -6, 2.57 ]
+            "definition": "defs/block.json", 
+            "position": {
+                "x": 50, 
+                "y": 160, 
+                "theta": 0.78
+            }
         }
     ]
 

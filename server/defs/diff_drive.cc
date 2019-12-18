@@ -3,7 +3,7 @@
 
 using namespace enviro;
 
-DiffDrive::DiffDrive(std::string name, World& world) : Agent(name,world){
+DiffDrive::DiffDrive(json spec, World& world) : Agent(spec ,world){
     std::cout << "Constructed a DiffDrive Agent\n";
 }
 

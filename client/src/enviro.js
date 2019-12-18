@@ -41,15 +41,20 @@ class MyComponent extends React.Component {
     } else if (!isLoaded) {
       return <div>Loading...</div>;
     } else {
-      const agent_list = data.agents.map(agent => 
-        <li key={agent.id}>({agent.id}, {agent.x}, {agent.y})</li>
-      )
+      const agent_list = data.agents.map(agent => {
+        let p = agent.specification.definition.shape.map(x => x.join(",")).join(" ");
+        let rot = `rotate(${180*agent.position.theta/Math.PI})`;
+        let tra = `translate(${agent.position.x} ${agent.position.y})`;
+        return <g key={agent.id} transform={tra + rot}>
+            <polygon points={p}
+                     style={{fill:"gray", stroke:"black", strokeWidth:1}}>
+            </polygon>
+        </g>
+      });
       return (
-        <ul>
-          <li>Time: {data.timestamp}</li>
-          <li>Result: {data.result}</li>
-          <li>Agents: <ul>{agent_list}</ul></li>
-        </ul>
+        <svg width="500" height="800">
+          {agent_list}
+        </svg>        
       );
     }
   }

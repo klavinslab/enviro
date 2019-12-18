@@ -8,7 +8,7 @@ using namespace enviro;
 class Block : public Agent {
 
     public:
-    Block(std::string name, World& world);
+    Block(json spec, World& world);
     void initialize();
     void step();
 

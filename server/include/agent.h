@@ -8,12 +8,14 @@
 #include "chipmunk.h"
 #include "world.h"
 
-#define AGENT_CREATE_TYPE (Agent* (*)(std::string, World&))
+#define DBG std::cout << __FILE__ << ":" << __LINE__ << "\n";
+
+#define AGENT_CREATE_TYPE (Agent* (*)(json spec, World&))
 #define AGENT_DESTROY_TYPE (void (*)(Agent*))
 
 #define DECLARE_INTERFACE(__CLASS_NAME__)                                         \
-extern "C" __CLASS_NAME__* create_agent(std::string name, enviro::World& world) { \
-    return new __CLASS_NAME__(name, world);                                       \
+extern "C" __CLASS_NAME__* create_agent(json spec, enviro::World& world) {        \
+    return new __CLASS_NAME__(spec, world);                                       \
 }                                                                                 \
 extern "C" void destroy_agent( __CLASS_NAME__* object ) {                         \
     delete object;                                                                \
@@ -32,7 +34,7 @@ namespace enviro {
         friend class World;
 
         public:
-        Agent(std::string name, World& world);
+        Agent(json specification, World& world);
         ~Agent();
 
         void init() {}
@@ -53,11 +55,26 @@ namespace enviro {
         cpShape * _shape;
         void (* _destroyer)(Agent*);
         int _id;
+        json _specification;
+
+        public:
+
+        // Static methods
+
+        //! This method creates a new agent using the json specification and the
+        //! DLL it points to. This can't be a constructor because it actually
+        //! builds a class that derives from Agent, but is not the Agent class
+        //! itself. 
+        static Agent * create_from_specification(json specification, World& world);
+
+        //! This method takes an agent entry in the config.json file
+        //! and replaces its "definition" field with the definition json
+        //! in the defs directory.        
+        static json build_specification(json agent_entry);
 
     };
 
-    // Factory method
-    Agent * CreateAgent(json specification, World& world);
+
 
 }
 

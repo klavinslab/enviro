@@ -8,7 +8,7 @@ using namespace enviro;
 class DiffDrive : public Agent {
 
     public:
-    DiffDrive(std::string name, World& world);
+    DiffDrive(json spec, World& world);
 
     void initialize();
     void step();
