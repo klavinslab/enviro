@@ -1,5 +1,6 @@
 {
     "name": "Block",
+    "type": "static",
     "description": "Inanimate Block",
     "shape": [
         [-10, 10],
@@ -7,8 +8,11 @@
         [10,-10],
         [-10,-10]
     ],
-    "friction": 10,
+    "friction": {
+      "collision": 1,
+      "linear": 1,
+      "rotational": 1
+    },
     "mass": 10,    
-    "inputs": [],
     "controller": "block.so"
 }

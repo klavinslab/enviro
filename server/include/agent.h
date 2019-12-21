@@ -37,18 +37,13 @@ namespace enviro {
         Agent(json specification, World& world);
         ~Agent();
 
-        void init() {}
-        void start() {}
-        void update() {}
-        void stop() {}
-
-        virtual void initialize() = 0;
-        virtual void step() = 0;
-
         Agent& apply_force(int index, cpFloat magnitude);
         json serialize();
         inline void set_destroyer(void (*f)(Agent*)) { _destroyer = f; }
         inline int get_id() { return _id; }
+
+        void actuate(cpFloat thrust, cpFloat torque);
+        void servo(cpFloat linear_velocity, cpFloat angular_velocity);
 
         private:
         cpBody * _body;
@@ -71,6 +66,8 @@ namespace enviro {
         //! and replaces its "definition" field with the definition json
         //! in the defs directory.        
         static json build_specification(json agent_entry);
+
+        bool r = false;
 
     };
 

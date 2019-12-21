@@ -13,18 +13,22 @@ class MyComponent extends React.Component {
   }
 
   componentDidMount() {
+    this.interval = setInterval(() => {
+      this.tick();
+    }, 25);
+  }
+
+  tick() {
     fetch("http://127.0.0.1:8765/state")
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
             isLoaded: true,
-            data: result
+            data: result,
+            error: false
           });
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
             isLoaded: true,
@@ -36,29 +40,39 @@ class MyComponent extends React.Component {
 
   render() {
     const { error, isLoaded, data } = this.state;
+    let w = window.innerWidth;
+    let h = window.innerHeight-41;    
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return <div className='message'>Error: {error.message}. Is the server running?</div>;
     } else if (!isLoaded) {
-      return <div>Loading...</div>;
+      return <div className='message'>Loading ...</div>;
     } else {
       const agent_list = data.agents.map(agent => {
         let p = agent.specification.definition.shape.map(x => x.join(",")).join(" ");
         let rot = `rotate(${180*agent.position.theta/Math.PI})`;
         let tra = `translate(${agent.position.x} ${agent.position.y})`;
         return <g key={agent.id} transform={tra + rot}>
-            <polygon points={p}
-                     style={{fill:"gray", stroke:"black", strokeWidth:1}}>
+            <polygon points={p} className="agent">
             </polygon>
         </g>
       });
+      let center = `translate(${w/2} ${h/2}) scale(2)`
       return (
-        <svg width="500" height="800">
-          {agent_list}
-        </svg>        
+        <div>
+          <div id="title-container">
+            <span id="title">ENVIRO: </span>
+            <span>{data.timestamp}</span>
+          </div>
+          <svg width={w} height={h}>
+            <g transform={center}>
+              {agent_list}
+            </g>
+          </svg>  
+        </div>      
       );
     }
   }
 }
 
-const domContainer = document.querySelector('#like_button_container');
+const domContainer = document.querySelector('#main_container');
 ReactDOM.render(e(MyComponent), domContainer);

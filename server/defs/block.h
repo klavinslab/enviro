@@ -9,8 +9,10 @@ class Block : public Agent {
 
     public:
     Block(json spec, World& world);
-    void initialize();
-    void step();
+    void init() {}
+    void start() {}
+    void update() {}
+    void stop() {}
 
 };
 

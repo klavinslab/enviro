@@ -10,8 +10,13 @@ class DiffDrive : public Agent {
     public:
     DiffDrive(json spec, World& world);
 
-    void initialize();
-    void step();
+    void init();
+    void start() {}
+    void update();
+    void stop() {}
+
+    high_resolution_clock::duration t;
+    float dir;
 
 };
 

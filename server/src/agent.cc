@@ -1,4 +1,5 @@
 #include <dlfcn.h>
+#include <math.h>
 #include "agent.h"
 
 #define IDENTITY { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 }
@@ -16,13 +17,11 @@ namespace enviro {
         int num_vertices = specification["definition"]["shape"].size();
         cpVect *vertices = (cpVect *) calloc(num_vertices, sizeof(cpVect));
         int i = 0;
-        DBG
+
         for (auto v : specification["definition"]["shape"]) {
             vertices[i++] = cpv(v[0], v[1]);
             std::cout << v << "\n";
         }
-
-        DBG
 
         cpFloat moment = cpMomentForPoly(
             specification["definition"]["mass"], 
@@ -30,11 +29,11 @@ namespace enviro {
             vertices, 
             cpvzero, 1);
 
-        DBG
-                 
-        _body = cpSpaceAddBody(space, cpBodyNew(specification["definition"]["mass"], moment));
-
-        DBG
+        _body = cpSpaceAddBody(
+            space, 
+            cpBodyNew(
+                specification["definition"]["mass"], 
+                moment));
 
         cpBodySetPosition(_body, cpv(
             specification["position"]["x"], 
@@ -42,8 +41,6 @@ namespace enviro {
         ));
 
         cpBodySetAngle(_body, specification["position"]["theta"]);
-
-        DBG
 
         _shape = cpSpaceAddShape(
             space, 
@@ -53,13 +50,60 @@ namespace enviro {
                 vertices, 
                 IDENTITY, 1));
 
-        cpShapeSetFriction(_shape, specification["definition"]["friction"]);
+        cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>());
 
-        DBG
+        if ( specification["definition"]["type"] == "static" ) {
+            cpBodySetType(_body, CP_BODY_TYPE_STATIC);
+        }
 
-        // TODO: DELETE VERTICES??
-
+        // TODO: DELETE VERTICES? Or make the instance vars and delete with destructor?
         _id = _next_id++;
+
+    }
+
+    void Agent::actuate(cpFloat thrust, cpFloat torque) {
+
+        if ( _specification["definition"]["type"] == "static" ) {
+            return;
+        }
+
+        cpVect v      = cpBodyGetVelocity(_body);
+        cpFloat theta = cpBodyGetAngle(_body);
+        cpFloat omega = cpBodyGetAngularVelocity(_body);
+
+        cpFloat kL = _specification["definition"]["friction"]["linear"].get<cpFloat>();  
+        cpFloat kR = _specification["definition"]["friction"]["rotational"].get<cpFloat>();
+
+        if (!r) {
+            r = true;
+            std::cout << kL << ", " << kR << "\n";
+        }
+
+        cpVect f = { 
+            x: thrust * cos(theta), 
+            y: thrust * sin(theta)
+        } ;
+
+        cpVect F = cpvadd(cpvmult(v, -kL), f);
+
+        cpBodySetForce(_body, F );
+        cpBodySetTorque(_body, torque - kR * omega );
+
+    }
+
+    void Agent::servo(cpFloat linear_velocity, cpFloat angular_velocity) {
+
+        cpVect v  = cpBodyGetVelocity(_body);
+        cpFloat theta = cpBodyGetAngle(_body);
+        cpFloat V = v.x * cos(theta);        // this should be the x component of the 
+                                             // current velocity vector projected
+                                             // along the vector [1,0].
+        cpFloat omega = cpBodyGetAngularVelocity(_body);
+
+        actuate(
+            10*(linear_velocity - V), 
+            1000*(angular_velocity-omega)
+        );
 
     }
 
@@ -71,7 +115,6 @@ namespace enviro {
     json Agent::serialize() {
         cpVect pos = cpBodyGetPosition(_body);
         cpVect vel = cpBodyGetVelocity(_body);
-        DBG
         return { 
             {"id", get_id()}, 
             {"position", { 
