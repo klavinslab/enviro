@@ -3,11 +3,11 @@
     "type": "dynamic",
     "description": "Differential Drive Robot",
     "shape": [
-        [-10, 10],
-        [10,10],
-        [12,0],
-        [10,-10],
-        [-10,-10]
+        { "x": -10, "y": 10 },
+        { "x": 10, "y": 10 },
+        { "x": 12, "y": 0 },
+        { "x": 10, "y": -10 },
+        { "x": -10, "y": -10 }
     ],
     "friction": {
         "collision": 10,

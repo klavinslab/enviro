@@ -3,6 +3,8 @@
 
 #include "elma.h"
 #include "enviro.h"
+#include "json_helper.h"
+#include "schema.h"
 
 //! \filee
 
@@ -12,14 +14,19 @@ using namespace enviro;
 
 int main() {
 
+    json config = json_helper::read("config.json");
+    json_helper::check(config, ENVIRO_CONFIG_SCHEMA);
+
     Manager m;
     World world("config.json");
+
+    std::cout << "A\n";
     WorldServer world_server(
         world, 
         m.get_update_mutex(), 
-        "0.0.0.0", // Todo: Move ip and port to config.json 
-        8765       //       or command line
+        config
     );
+    std::cout << "B\n";
 
     m.use_real_time()
      .set_niceness(100_us)

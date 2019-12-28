@@ -1,6 +1,9 @@
 #include <dlfcn.h>
 #include <math.h>
+#include "json_helper.h"
 #include "agent.h"
+
+extern json ENVIRO_AGENT_SCHEMA;
 
 #define IDENTITY { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 }
 
@@ -19,7 +22,7 @@ namespace enviro {
         int i = 0;
 
         for (auto v : specification["definition"]["shape"]) {
-            vertices[i++] = cpv(v[0], v[1]);
+            vertices[i++] = cpv(v["x"], v["y"]);
             std::cout << v << "\n";
         }
 
@@ -138,15 +141,9 @@ namespace enviro {
     json Agent::build_specification(json agent_entry) {
 
         json result = agent_entry, definition;
+        definition = json_helper::read(result["definition"]);
+        json_helper::check(definition, ENVIRO_AGENT_SCHEMA);
 
-        std::ifstream ifs(result["definition"]);
-        if ( ifs.fail() ) {
-            std:string msg = "Could not open agent definition file ";
-            msg += result["definition"];
-            throw std::runtime_error(msg);
-        }
-
-        ifs >> definition;
         result["definition"] = definition;
         return result;
     }  

@@ -3,10 +3,10 @@
     "type": "static",
     "description": "Inanimate Block",
     "shape": [
-        [-10, 10],
-        [10,10],
-        [10,-10],
-        [-10,-10]
+        { "x": -10, "y": 10 },
+        { "x": 10, "y": 10 },
+        { "x": -10, "y": -10 },
+        { "x": -10, "y": -10 }
     ],
     "friction": {
       "collision": 1,

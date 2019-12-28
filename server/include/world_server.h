@@ -12,25 +12,25 @@
 #include "world.h"
 #include "uWebSockets/App.h"
 
-using namespace httplib;
 using nlohmann::json; 
 
 namespace enviro {
 
-    long int unix_timestamp(); 
+    long int unix_timestamp();
     class World;
 
     class WorldServer {
 
         public:
-        WorldServer(World& world, std::mutex& mutex, const char* ip, int port);
+
+        WorldServer(World& world, std::mutex& mutex, json config);
+        void run();
+
+        private:
 
         void get_state(uWS::HttpResponse<true> *res, uWS::HttpRequest *req);
         void listen(us_listen_socket_t * token);
-        void run();
-        void stop() {}
 
-        private:
         World& world;
         std::mutex& manager_mutex;
         const char* ip;

@@ -1,3 +1,8 @@
+//
+// export BABEL_ENV="development"
+// npx babel --watch src/enviro.js --out-file enviro.js 
+// 
+
 'use strict';
 
 const e = React.createElement;
@@ -48,7 +53,7 @@ class MyComponent extends React.Component {
       return <div className='message'>Loading ...</div>;
     } else {
       const agent_list = data.agents.map(agent => {
-        let p = agent.specification.definition.shape.map(x => x.join(",")).join(" ");
+        let p = agent.specification.definition.shape.map(p => `${p.x},${p.y}`).join(" ");
         let rot = `rotate(${180*agent.position.theta/Math.PI})`;
         let tra = `translate(${agent.position.x} ${agent.position.y})`;
         return <g key={agent.id} transform={tra + rot}>

@@ -8,11 +8,11 @@ namespace enviro {
         return now;
     }    
 
-    WorldServer::WorldServer(World& world, std::mutex& mutex, const char* ip, int port) 
+    WorldServer::WorldServer(World& world, std::mutex& mutex, json config) 
         : world(world), 
         manager_mutex(mutex),
-        ip(ip), 
-        port(port) {}
+        ip(config["ip"].get<std::string>().c_str()),
+        port(config["port"]) {}
 
     void WorldServer::run() {
 
