@@ -15,5 +15,5 @@
         "rotational": 100
       },
     "mass": 0.25,
-    "controller": "diff_drive.so"
+    "controller": "defs/diff_drive.so"
 }

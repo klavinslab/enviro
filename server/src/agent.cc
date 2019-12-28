@@ -153,9 +153,11 @@ namespace enviro {
 
     Agent * Agent::create_from_specification(json spec, World& world) {
 
-        auto file = spec["definition"]["controller"].get<std::string>().c_str();
-        auto handle = dlopen(file , RTLD_LAZY);
+        auto file = spec["definition"]["controller"].get<std::string>();
+        std::cout << "Trying to open: " << file << "\n";
+        auto handle = dlopen(file.c_str() , RTLD_LAZY);
         if (!handle) {
+            std::cout << "Error: " << file << "\n";
             throw std::runtime_error(dlerror());
         }
         auto create_agent = AGENT_CREATE_TYPE dlsym(handle, "create_agent");

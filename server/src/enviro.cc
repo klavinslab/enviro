@@ -37,9 +37,7 @@ int main() {
         world_server.run(); 
     });
 
-    m.run(6000_s);
-
-    world_server.stop();
+    m.run();
     server_thread.join();
      
 }

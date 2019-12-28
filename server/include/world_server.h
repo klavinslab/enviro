@@ -7,10 +7,10 @@
 #include <string>
 #include <mutex>
 
-#include "httplib/httplib.h"
 #include "json/json.h"
 #include "agent.h"
 #include "world.h"
+#include "uWebSockets/App.h"
 
 using namespace httplib;
 using nlohmann::json; 
@@ -24,12 +24,13 @@ namespace enviro {
 
         public:
         WorldServer(World& world, std::mutex& mutex, const char* ip, int port);
+
+        void get_state(uWS::HttpResponse<true> *res, uWS::HttpRequest *req);
+        void listen(us_listen_socket_t * token);
         void run();
-        void stop();
-        void get_state(const Request& req, Response& res);
+        void stop() {}
 
         private:
-        Server server;
         World& world;
         std::mutex& manager_mutex;
         const char* ip;

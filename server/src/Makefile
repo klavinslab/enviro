@@ -1,5 +1,5 @@
 #Compilers
-CC          := g++ -std=c++14 -Wno-psabi
+CC          := g++ -std=c++17 -Wno-psabi
 DGEN        := doxygen
 
 #The Target Binary Program
@@ -16,9 +16,9 @@ ELMADIR     := /development/elma
 
 #Flags, Libraries and Includes
 CFLAGS      := -ggdb -export-dynamic
-LIB         := -lgtest -lpthread -lelma -lchipmunk -ldl #  -lssl -lcrypto 
-INC         := -I $(INCDIR) -I $(CHIPDIR)/include/chipmunk -I $(ELMADIR)/include
-LIBDIR      := -L $(CHIPDIR)/build/src -L $(ELMADIR)/lib
+LIB         := -lgtest -lpthread -lelma -lchipmunk -ldl -luSockets -lz #  -lssl -lcrypto 
+INC         := -I $(INCDIR) -I $(CHIPDIR)/include/chipmunk -I $(ELMADIR)/include -I /usr/local/include/uSockets
+LIBDIR      := -L $(CHIPDIR)/build/src -L $(ELMADIR)/lib -L /usr/local/lib/uSockets
 INCDEP      := -I$(INCDIR)/build/src/ $(CHIPDIR)/
 
 #Files

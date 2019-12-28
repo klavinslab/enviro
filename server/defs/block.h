@@ -1,7 +1,8 @@
 #ifndef __DIFF_DRIVE_AGENT__H
 #define __DIFF_DRIVE_AGENT__H 
 
-#include "enviro.h"
+#include "agent.h"
+#include "world.h"
 
 using namespace enviro;
 

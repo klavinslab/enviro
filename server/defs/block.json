@@ -14,5 +14,5 @@
       "rotational": 1
     },
     "mass": 10,    
-    "controller": "block.so"
+    "controller": "defs/block.so"
 }

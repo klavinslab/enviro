@@ -2,7 +2,7 @@
 ARCH := $(shell uname -m)
 
 #Compilers
-CC          := g++ -std=c++14 -Wno-psabi
+CC          := g++ -std=c++17 -Wno-psabi
 
 #The Target Library
 
