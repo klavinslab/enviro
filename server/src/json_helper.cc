@@ -39,7 +39,7 @@ namespace json_helper {
             }
         } else if ( schema.is_string() ) {
             if ( ! object.is_string() ) {
-                throw std::runtime_error("JSON Error: Expected number but got " + object.dump());
+                throw std::runtime_error("JSON Error: Expected string but got " + object.dump());
             }
         } else if ( schema.is_array() ) {
             if ( schema.size() < 1 ) {
