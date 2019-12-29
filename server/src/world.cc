@@ -4,25 +4,10 @@
 
 namespace enviro {
 
-    World::World(std::string config_file_path) : Process("World") {
+    World::World(json config) : Process("World") {
 
         space = cpSpaceNew();
         timeStep = 1.0/60.0;
-
-        // read file
-        std::ifstream ifs(config_file_path);
-        if ( ifs.fail() ) {
-            std::cerr << "Could not open configuration file " 
-                      << config_file_path 
-                      << "\n";
-            throw std::runtime_error("file error");
-        }
-
-        json config;
-        ifs >> config;
-
-        // Todo: make sure there is a "name" key
-        std::cout << "name = " << config["name"] << "\n";
         set_name(config["name"]);
 
         for ( auto agent_entry : config["agents"] ) {

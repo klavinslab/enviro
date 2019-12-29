@@ -17,7 +17,7 @@ namespace enviro {
     class World : public Process {
         public:
 
-        World(std::string name);
+        World(json config);
         ~World();
 
         void init() {}

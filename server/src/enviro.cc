@@ -17,15 +17,13 @@ int main() {
     json_helper::check(config, ENVIRO_CONFIG_SCHEMA);
 
     Manager m;
-    World world("config.json");
+    World world(config);
 
-    std::cout << "A\n";
     WorldServer world_server(
         world, 
         m.get_update_mutex(), 
         config
     );
-    std::cout << "B\n";
 
     m.use_real_time()
      .set_niceness(100_us)
