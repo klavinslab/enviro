@@ -1,3 +1,4 @@
+#include "enviro.h"
 #include "world_server.h"
 
 namespace enviro {

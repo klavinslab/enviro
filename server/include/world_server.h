@@ -7,9 +7,7 @@
 #include <string>
 #include <mutex>
 
-#include "json/json.h"
-#include "agent.h"
-#include "world.h"
+#include "enviro.h"
 #include "uWebSockets/App.h"
 
 using nlohmann::json; 

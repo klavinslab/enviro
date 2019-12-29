@@ -3,10 +3,9 @@
 
 #include <iostream>
 #include <chrono>
-#include "json/json.h"
 #include "elma.h"
 #include "chipmunk.h"
-#include "world.h"
+#include "enviro.h"
 
 #define DBG std::cout << __FILE__ << ":" << __LINE__ << "\n";
 

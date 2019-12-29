@@ -1,11 +1,11 @@
 #ifndef __ENVIRO_SCHEMA__H
-#define __ENVIRO_SCHEMA__H
+#define __ENVIRO_SCHEMA__H 
 
-#include "json/json.h"
+#include "enviro.h"
 
 using nlohmann::json; 
 
-json ENVIRO_CONFIG_SCHEMA = R"(
+inline json ENVIRO_CONFIG_SCHEMA = R"(
     {
         "name": "",
         "ip": "",
@@ -19,11 +19,19 @@ json ENVIRO_CONFIG_SCHEMA = R"(
                     "theta": 0
                 }
             }
+        ],    
+        "statics": [
+            {
+                "color": "",
+                "shape": [
+                    { "x": 0, "y": 0 }
+                ]
+            }
         ]
     }
 )"_json;
 
-json ENVIRO_AGENT_SCHEMA = R"(
+inline json ENVIRO_AGENT_SCHEMA = R"(
     {
         "name": "",
         "type": "",

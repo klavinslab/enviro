@@ -1,9 +1,6 @@
 #include <dlfcn.h>
 #include <math.h>
-#include "json_helper.h"
-#include "agent.h"
-
-extern json ENVIRO_AGENT_SCHEMA;
+#include "enviro.h"
 
 #define IDENTITY { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 }
 
@@ -154,7 +151,7 @@ namespace enviro {
         std::cout << "Trying to open: " << file << "\n";
         auto handle = dlopen(file.c_str() , RTLD_LAZY);
         if (!handle) {
-            std::cout << "Error: " << file << "\n";
+            std::cerr << "Error: " << file << "\n";
             throw std::runtime_error(dlerror());
         }
         auto create_agent = AGENT_CREATE_TYPE dlsym(handle, "create_agent");
