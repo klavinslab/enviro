@@ -11,8 +11,8 @@
     ],
     "friction": {
         "collision": 10,
-        "linear": 10,
-        "rotational": 100
+        "linear": 5,
+        "rotational": 10
       },
     "mass": 0.25,
     "controller": "defs/diff_drive.so"

@@ -1,17 +1,17 @@
 {
     "name": "Block",
-    "type": "static",
+    "type": "dynamic",
     "description": "Inanimate Block",
     "shape": [
         { "x": -10, "y": 10 },
         { "x": 10, "y": 10 },
-        { "x": -10, "y": -10 },
+        { "x": 10, "y": -10 },
         { "x": -10, "y": -10 }
     ],
     "friction": {
-      "collision": 1,
-      "linear": 1,
-      "rotational": 1
+      "collision": 10,
+      "linear": 100,
+      "rotational": 10000
     },
     "mass": 10,    
     "controller": "defs/block.so"

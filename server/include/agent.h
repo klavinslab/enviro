@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <chrono>
-#include "elma.h"
+#include "elma/elma.h"
 #include "chipmunk.h"
 #include "enviro.h"
 
@@ -41,8 +41,22 @@ namespace enviro {
         inline void set_destroyer(void (*f)(Agent*)) { _destroyer = f; }
         inline int get_id() { return _id; }
 
+        //! Apply the given thrust and torque.
         void actuate(cpFloat thrust, cpFloat torque);
+
+        //! Attempt to track a given linear and angular velocity.
         void servo(cpFloat linear_velocity, cpFloat angular_velocity);
+
+        //! Slow the agent down
+        void damp_movement();
+
+        inline double linear_friction() const {
+            return _specification["definition"]["friction"]["linear"];
+        }
+
+        inline double rotational_friction() const {
+            return _specification["definition"]["friction"]["rotational"];
+        } 
 
         private:
         cpBody * _body;
@@ -52,25 +66,20 @@ namespace enviro {
         json _specification;
 
         public:
-
         // Static methods
 
         //! This method creates a new agent using the json specification and the
         //! DLL it points to. This can't be a constructor because it actually
         //! builds a class that derives from Agent, but is not the Agent class
-        //! itself. 
+        //! itself.
         static Agent * create_from_specification(json specification, World& world);
 
         //! This method takes an agent entry in the config.json file
         //! and replaces its "definition" field with the definition json
-        //! in the defs directory.        
+        //! in the defs directory.
         static json build_specification(json agent_entry);
 
-        bool r = false;
-
     };
-
-
 
 }
 

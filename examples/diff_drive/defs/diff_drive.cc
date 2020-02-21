@@ -20,12 +20,9 @@ void DiffDrive::update() {
         dir = -dir;
     }
     if ( dir > 0 ) {
-        servo(2*dir,0);
+        servo(4*dir,0);
     } else {
-        servo(0, 0.05*dir);
+        servo(0, 0.1*dir);
     }
 
-
 }
-
-

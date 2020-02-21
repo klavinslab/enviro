@@ -1,8 +1,7 @@
 #ifndef __DIFF_DRIVE_AGENT__H
 #define __DIFF_DRIVE_AGENT__H 
 
-#include "agent.h"
-#include "world.h"
+#include "enviro.h"
 
 using namespace enviro;
 
@@ -12,7 +11,7 @@ class Block : public Agent {
     Block(json spec, World& world);
     void init() {}
     void start() {}
-    void update() {}
+    void update();
     void stop() {}
 
 };

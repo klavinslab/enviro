@@ -7,16 +7,20 @@ namespace enviro {
     World::World(json config) : Process("World") {
 
         space = cpSpaceNew();
-        timeStep = 1.0/60.0;
+        timeStep = 1.0/60.0; // TODO: move to config.json
         set_name(config["name"]);
 
         for ( auto agent_entry : config["agents"] ) {
-
             json spec = Agent::build_specification(agent_entry);
             auto agent_ptr = Agent::create_from_specification(spec, *this);
             add_agent(*agent_ptr);
-
         }
+
+        for ( auto static_entry : config["statics"] ) {
+            json spec = StaticObject::build_specification(static_entry);
+            auto agent_ptr = new StaticObject(spec, *this);
+            add_agent(*agent_ptr);
+        }        
 
     }
 

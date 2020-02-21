@@ -1,13 +1,8 @@
-
 TARGET := bin/enviro
 
-all: $(TARGETS)
+all:
 	$(MAKE) -C src all
-	$(MAKE) -C defs all
 
 clean:
 	@$(RM) $(TARGET)
 	$(MAKE) -C src clean
-
-
-

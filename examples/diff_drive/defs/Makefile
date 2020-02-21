@@ -10,12 +10,12 @@ CC          := g++ -std=c++17 -Wno-psabi
 SRCEXT      := cc
 
 # Directories
-ELMADIR     := /development/elma
 CHIPDIR     := /usr/local/src/Chipmunk2D
+ENVIRODIR   := /development/server/include
 
 #Flags, Libraries and Includes
 CFLAGS      := -ggdb  -shared -fPIC
-INCLUDE		:= -I../include -I$(ELMADIR)/include -I $(CHIPDIR)/include/chipmunk 
+INCLUDE		:= -I $(ENVIRODIR) -I $(CHIPDIR)/include/chipmunk 
 
 #Files
 
@@ -33,6 +33,6 @@ clean:
 	@$(RM) -rf $(TARGETS)
 
 # Compile
-$(TARGETDIR)/%.so: %.cc %.h ../include/*.h
+$(TARGETDIR)/%.so: %.cc %.h
 	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
 

@@ -12,15 +12,12 @@ namespace enviro {
 
         cpSpace * space = world.get_space();
 
-        std::cout << specification << "\n";
-
         int num_vertices = specification["definition"]["shape"].size();
         cpVect *vertices = (cpVect *) calloc(num_vertices, sizeof(cpVect));
         int i = 0;
 
         for (auto v : specification["definition"]["shape"]) {
             vertices[i++] = cpv(v["x"], v["y"]);
-            std::cout << v << "\n";
         }
 
         cpFloat moment = cpMomentForPoly(
@@ -56,11 +53,13 @@ namespace enviro {
             cpBodySetType(_body, CP_BODY_TYPE_STATIC);
         }
 
-        // TODO: DELETE VERTICES? Or make the instance vars and delete with destructor?
+        // TODO: DELETE VERTICES? Or make them instance vars and delete with destructor?
         _id = _next_id++;
 
     }
 
+    // TODO: This is for a diff drive robot, so should not be in this generic agent.
+    //       Or it should be refactored to be generic. 
     void Agent::actuate(cpFloat thrust, cpFloat torque) {
 
         if ( _specification["definition"]["type"] == "static" ) {
@@ -74,11 +73,6 @@ namespace enviro {
         cpFloat kL = _specification["definition"]["friction"]["linear"].get<cpFloat>();  
         cpFloat kR = _specification["definition"]["friction"]["rotational"].get<cpFloat>();
 
-        if (!r) {
-            r = true;
-            std::cout << kL << ", " << kR << "\n";
-        }
-
         cpVect f = { 
             x: thrust * cos(theta), 
             y: thrust * sin(theta)
@@ -91,6 +85,8 @@ namespace enviro {
 
     }
 
+    // TODO: This is servoing for a diff drive robot, so should not be in this generic agent.
+    //       Or it should be refactored to be generic: servo in a particular direction.
     void Agent::servo(cpFloat linear_velocity, cpFloat angular_velocity) {
 
         cpVect v  = cpBodyGetVelocity(_body);
@@ -101,16 +97,20 @@ namespace enviro {
         cpFloat omega = cpBodyGetAngularVelocity(_body);
 
         actuate(
-            10*(linear_velocity - V), 
-            1000*(angular_velocity-omega)
+            linear_friction()*(linear_velocity - V), 
+            rotational_friction()*(angular_velocity-omega)
         );
 
+    }
+
+    void Agent::damp_movement() {
+        servo(0,0);
     }
 
     Agent::~Agent() {
         cpShapeFree(_shape);
         cpBodyFree(_body);
-    }    
+    }
 
     json Agent::serialize() {
         cpVect pos = cpBodyGetPosition(_body);
@@ -148,7 +148,6 @@ namespace enviro {
     Agent * Agent::create_from_specification(json spec, World& world) {
 
         auto file = spec["definition"]["controller"].get<std::string>();
-        std::cout << "Trying to open: " << file << "\n";
         auto handle = dlopen(file.c_str() , RTLD_LAZY);
         if (!handle) {
             std::cerr << "Error: " << file << "\n";

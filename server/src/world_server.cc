@@ -51,7 +51,7 @@ namespace enviro {
         if (token) {
             std::cout << "Listening on port " << port << std::endl;
         } else {
-            std::cout << "failed to listen" << std::endl;
+            throw std::runtime_error("WorldServer could not listen for connections.");
         }
     }
 
