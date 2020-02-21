@@ -1,6 +1,7 @@
 #ifndef __WANDERER_AGENT__H
 #define __WANDERER_AGENT__H 
 
+#include <string>
 #include "enviro.h"
 
 using namespace enviro;
@@ -16,7 +17,8 @@ class Wanderer : public Agent {
     void stop() {}
 
     high_resolution_clock::duration t;
-    float dir;
+    double fwd, rot;
+    std::string state;
 
 };
 

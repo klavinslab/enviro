@@ -30,7 +30,7 @@ all: $(FULL_TARGETS)
 
 #Clean only Objects
 clean:
-	@$(RM) -rf $(TARGETS)
+	@$(RM) -rf $(TARGETDIR)/*.so
 
 # Compile
 $(TARGETDIR)/%.so: %.cc %.h
