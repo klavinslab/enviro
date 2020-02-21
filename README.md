@@ -29,7 +29,7 @@ make
 To compile an example, do 
 
 ```bash
-cd ../examples/diff_drive
+cd ../examples/wanderers
 make
 ```
 
