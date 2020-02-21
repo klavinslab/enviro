@@ -11,9 +11,16 @@ To start the development environment, do
 docker run -p80:80 -p8765:8765 -v $PWD:/development -it enviro bash
 ```
 
-To start the client, do
+To build the client, do
 ```bash
 cd client
+npm install  
+export NODE_ENV=production
+npx babel --watch src/enviro.js --out-file enviro.js 
+```
+
+To start the client, do
+```bash
 ws -p 80 &
 ```
 
