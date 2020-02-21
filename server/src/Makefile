@@ -8,7 +8,7 @@ TARGET      := enviro
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := .
 INCDIR      := ../include
-BUILDDIR    := .
+BUILDDIR    := ../build
 TARGETDIR   := ../bin
 SRCEXT      := cc
 CHIPDIR     := /usr/local/src/Chipmunk2D

@@ -26,7 +26,7 @@ json StaticObject::build_specification(json static_entry) {
 
     result["definition"]["shape"] = static_entry["shape"];
     result["position"] = R"({"x": 0, "y": 0, "theta": 0})"_json;
-    
+
     return result;
 
-}  
+}

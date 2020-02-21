@@ -1,7 +1,7 @@
 {
-    "name": "DiffDrive",
+    "name": "Wanderer",
     "type": "dynamic",
-    "description": "Differential Drive Robot",
+    "description": "A Wandering Robot",
     "shape": [
         { "x": -10, "y": 10 },
         { "x": 10, "y": 10 },
@@ -15,5 +15,5 @@
         "rotational": 10
       },
     "mass": 0.25,
-    "controller": "defs/diff_drive.so"
+    "controller": "lib/wanderer.so"
 }

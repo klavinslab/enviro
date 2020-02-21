@@ -1,14 +1,12 @@
 {
 
     "name": "Robot World",
-
     "ip": "0.0.0.0",
-
     "port": 8765,
 
     "agents": [
         {
-            "definition": "defs/diff_drive.json",
+            "definition": "defs/wanderer.json",
             "position": {
                 "x": -100, 
                 "y": -10, 
@@ -16,7 +14,7 @@
             }
         },
         {
-            "definition": "defs/diff_drive.json", 
+            "definition": "defs/wanderer.json", 
             "position": {
                 "x": 50, 
                 "y": 10, 
@@ -24,7 +22,7 @@
             }
         },
         {
-            "definition": "defs/diff_drive.json", 
+            "definition": "defs/wanderer.json", 
             "position": {
                 "x": 10, 
                 "y": -50, 
@@ -32,7 +30,7 @@
             }
         },
         {
-            "definition": "defs/diff_drive.json", 
+            "definition": "defs/wanderer.json", 
             "position": {
                 "x": -10, 
                 "y": 50, 

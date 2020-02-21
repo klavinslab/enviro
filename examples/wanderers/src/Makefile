@@ -19,7 +19,7 @@ INCLUDE		:= -I $(ENVIRODIR) -I $(CHIPDIR)/include/chipmunk
 
 #Files
 
-TARGETDIR	 := .
+TARGETDIR	 := ../lib
 SOURCES      := $(wildcard *.cc)
 HEADERS      := $(wildcard *.h)
 TARGETS		 := $(patsubst %.cc,%.so,$(wildcard *.cc))
