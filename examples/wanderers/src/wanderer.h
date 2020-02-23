@@ -58,8 +58,6 @@ namespace {
         public:
         Wanderer(json spec, World& world) : Agent(spec, world) {
             add_process(wc);
-            wc.moving_forward.use_agent(*this);
-            wc.rotating.use_agent(*this);
         }
 
         private:

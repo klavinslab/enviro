@@ -21,10 +21,4 @@ namespace enviro {
 
 }
 
-#define LINK_STATES \
-    for ( Transition& t : _transitions ) { \
-        AgentInterface * ai = dynamic_cast<AgentInterface *>(&t.from()); \
-        ai->use_agent(*agent); \
-    } 
-
 #endif

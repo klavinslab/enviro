@@ -66,6 +66,7 @@ namespace enviro {
         } 
 
         Agent& add_process(Process &p);
+        Agent& add_process(StateMachine &m);
 
         private:
         cpBody * _body;

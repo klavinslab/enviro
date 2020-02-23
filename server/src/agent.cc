@@ -133,11 +133,26 @@ namespace enviro {
     }
 
     Agent& Agent::add_process(Process &p) {
+        std::cout << "Adding process to agent\n";
         _processes.push_back(&p);
         AgentInterface * ai = dynamic_cast<AgentInterface *>(&p);
         ai->use_agent(*this);
         return *this;
     }
+
+    Agent& Agent::add_process(StateMachine &m) {
+
+        add_process(static_cast<Process&>(m));
+
+        for ( Transition& t : m.transitions() ) {
+            AgentInterface * ai = dynamic_cast<AgentInterface *>(&t.from());
+            ai->use_agent(*this);
+            ai = dynamic_cast<AgentInterface *>(&t.to());
+            ai->use_agent(*this);
+        }
+
+        return *this;
+    }    
 
     Agent::~Agent() {
         cpShapeFree(_shape);
