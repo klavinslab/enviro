@@ -57,7 +57,7 @@ class MyComponent extends React.Component {
         let rot = `rotate(${180*agent.position.theta/Math.PI})`;
         let tra = `translate(${agent.position.x} ${agent.position.y})`;
         return <g key={agent.id} transform={tra + rot}>
-            <polygon points={p} className="agent">
+            <polygon points={p} className="agent" style={agent.specification.style}>
             </polygon>
         </g>
       });

@@ -2,26 +2,73 @@
 #define __WANDERER_AGENT__H 
 
 #include <string>
+#include <math.h>
 #include "enviro.h"
 
-using namespace enviro;
+namespace {
 
-class Wanderer : public Agent {
+    using namespace enviro;
 
-    public:
-    Wanderer(json spec, World& world);
+    class MovingForward : public State, public AgentInterface {
+        public:
+        MovingForward() : State("Moving Forward") {}
+        void entry(const Event& e) {}
+        void during() { 
+            agent->servo(2, 0); 
+        }
+        void exit(const Event& e) {}
+    };
 
-    void init();
-    void start() {}
-    void update();
-    void stop() {}
+    class Rotating : public State, public AgentInterface {
+        public: 
+        Rotating() : State("Rotating") {}
+        void entry(const Event& e) { 
+            rate = rand() % 2 == 0 ? -0.25 : 0.25;  
+        }
+        void during() { 
+            agent->servo(0,rate);  
+        }
+        void exit(const Event& e) {}
+        double rate;
+    };
 
-    high_resolution_clock::duration t;
-    double fwd, rot;
-    std::string state;
+    class WandererController : public StateMachine, public AgentInterface {
 
-};
+        public:
+        WandererController() : StateMachine() {
+            set_initial(moving_forward);
+            add_transition("random_tick", moving_forward, rotating);
+            add_transition("random_tick", rotating, moving_forward);
+        }
 
-DECLARE_INTERFACE(Wanderer);
+        void update() {
+            if ( rand() % 100 <= 5 ) {
+                emit(Event("random_tick"));
+            }        
+            StateMachine::update();
+        }
+
+        MovingForward moving_forward;
+        Rotating rotating;
+
+    };
+
+    class Wanderer : public Agent {
+
+        public:
+        Wanderer(json spec, World& world) : Agent(spec, world) {
+            add_process(wc);
+            wc.moving_forward.use_agent(*this);
+            wc.rotating.use_agent(*this);
+        }
+
+        private:
+        WandererController wc;
+
+    };
+
+    DECLARE_INTERFACE(Wanderer);
+
+}
 
 #endif

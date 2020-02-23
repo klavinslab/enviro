@@ -2,7 +2,8 @@
 # docker run -p80:80 -p8765:8765 -v $PWD:/development -it dev bash
 #
 
-FROM klavins/elma:latest
+# FROM klavins/elma:latest
+FROM elma
 
 RUN apt-get update && \
     apt-get install -y git && \

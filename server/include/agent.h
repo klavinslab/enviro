@@ -27,6 +27,8 @@ using nlohmann::json;
 namespace enviro {
 
     class World;
+    class Controller;
+    class AgentInterface;
 
     class Agent : public Process {
 
@@ -35,6 +37,11 @@ namespace enviro {
         public:
         Agent(json specification, World& world);
         ~Agent();
+
+        void init();
+        void start();
+        void update();
+        void stop();
 
         Agent& apply_force(int index, cpFloat magnitude);
         json serialize();
@@ -58,12 +65,15 @@ namespace enviro {
             return _specification["definition"]["friction"]["rotational"];
         } 
 
+        Agent& add_process(Process &p);
+
         private:
         cpBody * _body;
         cpShape * _shape;
         void (* _destroyer)(Agent*);
         int _id;
         json _specification;
+        std::vector<Process *> _processes;
 
         public:
         // Static methods

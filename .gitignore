@@ -1,7 +1,7 @@
 *.o
 *.so
 server/bin/enviro
-todo.txt
+*.txt
 sandbox/
 client/node_modules
 client/*.js

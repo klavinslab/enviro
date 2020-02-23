@@ -13,34 +13,7 @@
                 "y": -10, 
                 "theta": 0
             }
-        },
-        {
-            "definition": "defs/wanderer.json", 
-            "style": { "fill": "lightblue", "stroke": "black" },
-            "position": {
-                "x": 50, 
-                "y": 10, 
-                "theta": 3.14
-            }
-        },
-        {
-            "definition": "defs/wanderer.json", 
-            "style": { "fill": "pink", "stroke": "black" },
-            "position": {
-                "x": 10, 
-                "y": -50, 
-                "theta": 3.14
-            }
-        },
-        {
-            "definition": "defs/wanderer.json", 
-            "style": { "fill": "lightorange", "stroke": "black" },
-            "position": {
-                "x": -10, 
-                "y": 50, 
-                "theta": 3.14
-            }
-        },                
+        },           
         {
             "definition": "defs/block.json", 
             "style": { "fill": "gray", "stroke": "black" },

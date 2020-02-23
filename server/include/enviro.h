@@ -4,6 +4,7 @@
 #include "json/json.h"
 
 #include "agent.h"
+#include "agent_interface.h"
 #include "static_object.h"
 #include "world.h"
 #include "json_helper.h"

@@ -58,6 +58,31 @@ namespace enviro {
 
     }
 
+    void Agent::init() {
+        for ( Process * p : _processes ) {
+            p->set_manager(_manager_ptr);
+            p->init();
+        }
+    }
+
+    void Agent::start() {
+        for ( Process * p : _processes ) {
+            p->start();
+        }
+    }
+
+    void Agent::update() {
+        for ( Process * p : _processes ) {
+            p->update();
+        }
+    }
+
+    void Agent::stop() {
+        for ( Process * p : _processes ) {
+            p->stop();
+        }
+    }
+
     // TODO: This is for a diff drive robot, so should not be in this generic agent.
     //       Or it should be refactored to be generic. 
     void Agent::actuate(cpFloat thrust, cpFloat torque) {
@@ -105,6 +130,13 @@ namespace enviro {
 
     void Agent::damp_movement() {
         servo(0,0);
+    }
+
+    Agent& Agent::add_process(Process &p) {
+        _processes.push_back(&p);
+        AgentInterface * ai = dynamic_cast<AgentInterface *>(&p);
+        ai->use_agent(*this);
+        return *this;
     }
 
     Agent::~Agent() {
@@ -161,3 +193,4 @@ namespace enviro {
     }
 
 }
+

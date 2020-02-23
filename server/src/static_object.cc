@@ -2,9 +2,7 @@
 
 using namespace enviro;
 
-StaticObject::StaticObject(json spec, World& world) : Agent(spec, world) {
-    std::cout << "Made new static object\n";
-}
+StaticObject::StaticObject(json spec, World& world) : Agent(spec, world) {}
 
 json StaticObject::build_specification(json static_entry) {
 
@@ -25,6 +23,7 @@ json StaticObject::build_specification(json static_entry) {
     )"_json;
 
     result["definition"]["shape"] = static_entry["shape"];
+    result["style"] = static_entry["style"];
     result["position"] = R"({"x": 0, "y": 0, "theta": 0})"_json;
 
     return result;

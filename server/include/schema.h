@@ -13,6 +13,7 @@ inline json ENVIRO_CONFIG_SCHEMA = R"(
         "agents": [
             {
                 "definition": "",
+                "style": { "stroke": "", "fill": "" },
                 "position": {
                     "x": 0, 
                     "y": 0, 
@@ -22,7 +23,7 @@ inline json ENVIRO_CONFIG_SCHEMA = R"(
         ],    
         "statics": [
             {
-                "color": "",
+                "style": { "stroke": "", "fill": "" },
                 "shape": [
                     { "x": 0, "y": 0 }
                 ]

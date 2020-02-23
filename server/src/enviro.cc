@@ -18,6 +18,8 @@ int main() {
 
     Manager m;
     World world(config);
+    StateMachine sm; // This is here just so the enviro executable includes
+                     // state machines from libelma.a. Weird.
 
     WorldServer world_server(
         world, 
