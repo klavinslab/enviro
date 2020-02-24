@@ -8,7 +8,10 @@ namespace enviro {
 
     static int _next_id = 0;
 
-    Agent::Agent(json specification, World& world) : _specification(specification), Process() {
+    Agent::Agent(json specification, World& world) : 
+        _specification(specification), 
+        _world_ptr(&world), 
+        Process(specification["definition"]["name"].get<string>()) {
 
         cpSpace * space = world.get_space();
 
@@ -56,6 +59,39 @@ namespace enviro {
         // TODO: DELETE VERTICES? Or make them instance vars and delete with destructor?
         _id = _next_id++;
 
+        setup_sensors();
+
+    }
+
+    void Agent::setup_sensors() {
+        for ( auto spec : _specification["definition"]["sensors"] ) {
+            if ( spec["type"] == "range" ) {
+                _sensors.push_back(new RangeSensor(
+                    *this,
+                    spec["location"]["x"],
+                    spec["location"]["y"],
+                    spec["direction"]
+                ));
+            } else {
+                throw Exception("Unknown Sensor Type (only 'range' is supported at this time");
+            }
+        }
+    }
+
+    double Agent::sensor_value(int index) {
+        if ( index < _sensors.size() ) {
+            return _sensors[index]->value();
+        } else {
+            throw Exception("Sensor index out of range");
+        }
+    }    
+
+    std::vector<double> Agent::sensor_values() {
+        std::vector<double> values;
+        for ( int i=0; i<_sensors.size(); i++ ) {
+            values.push_back(sensor_value(i));
+        }
+        return values;
     }
 
     void Agent::init() {
@@ -83,47 +119,35 @@ namespace enviro {
         }
     }
 
-    // TODO: This is for a diff drive robot, so should not be in this generic agent.
-    //       Or it should be refactored to be generic. 
     void Agent::actuate(cpFloat thrust, cpFloat torque) {
 
         if ( _specification["definition"]["type"] == "static" ) {
             return;
         }
 
-        cpVect v      = cpBodyGetVelocity(_body);
-        cpFloat theta = cpBodyGetAngle(_body);
-        cpFloat omega = cpBodyGetAngularVelocity(_body);
-
         cpFloat kL = _specification["definition"]["friction"]["linear"].get<cpFloat>();  
         cpFloat kR = _specification["definition"]["friction"]["rotational"].get<cpFloat>();
 
         cpVect f = { 
-            x: thrust * cos(theta), 
-            y: thrust * sin(theta)
+            x: thrust * cos(angle()),
+            y: thrust * sin(angle())
         } ;
 
-        cpVect F = cpvadd(cpvmult(v, -kL), f);
+        cpVect F = cpvadd(cpvmult(velocity(), -kL), f);
 
         cpBodySetForce(_body, F );
-        cpBodySetTorque(_body, torque - kR * omega );
+        cpBodySetTorque(_body, torque - kR * angular_velocity() );
 
     }
 
-    // TODO: This is servoing for a diff drive robot, so should not be in this generic agent.
-    //       Or it should be refactored to be generic: servo in a particular direction.
-    void Agent::servo(cpFloat linear_velocity, cpFloat angular_velocity) {
+    void Agent::servo(cpFloat linear_velocity_target, cpFloat angular_velocity_target) {
 
-        cpVect v  = cpBodyGetVelocity(_body);
-        cpFloat theta = cpBodyGetAngle(_body);
-        cpFloat V = v.x * cos(theta);        // this should be the x component of the 
-                                             // current velocity vector projected
-                                             // along the vector [1,0].
-        cpFloat omega = cpBodyGetAngularVelocity(_body);
-
+        cpFloat V = velocity().x * cos(angle());  // this should be the x component of the 
+                                                  // current velocity vector projected
+                                                  // along the vector [1,0].
         actuate(
-            linear_friction()*(linear_velocity - V), 
-            rotational_friction()*(angular_velocity-omega)
+            linear_friction()*(linear_velocity_target - V), 
+            rotational_friction()*(angular_velocity_target-angular_velocity())
         );
 
     }
@@ -133,7 +157,6 @@ namespace enviro {
     }
 
     Agent& Agent::add_process(Process &p) {
-        std::cout << "Adding process to agent\n";
         _processes.push_back(&p);
         AgentInterface * ai = dynamic_cast<AgentInterface *>(&p);
         ai->use_agent(*this);
@@ -176,7 +199,8 @@ namespace enviro {
                     { "theta", cpBodyGetAngularVelocity(_body)}
                 },
             },
-            {"specification", _specification}
+            {"specification", _specification},
+            {"sensors", sensor_values() }
         };            
     }
 
@@ -208,4 +232,3 @@ namespace enviro {
     }
 
 }
-

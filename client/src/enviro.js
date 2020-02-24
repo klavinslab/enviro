@@ -7,7 +7,43 @@
 
 const e = React.createElement;
 
-class MyComponent extends React.Component {
+class Loading extends React.Component {
+  render() {
+    return <div className='message'>Loading ...</div>
+  }
+}
+
+class Error extends React.Component {
+  render() {
+    return <div className='message'>Error: {this.props.error.message}. Is the server running?</div>
+  }
+}
+
+class Sensor extends React.Component {
+  render() {
+    let agent = this.props.agent;
+    let x1 = agent.specification.definition.sensors[i].location.x,
+    y1 = agent.specification.definition.sensors[i].location.y,
+    x2 = x1 + value * Math.cos(agent.specification.definition.sensors[i].direction),
+    y2 = y1 + value * Math.sin(agent.specification.definition.sensors[i].direction);
+    return <line x1={x1} y1={y1} x2={x2} y2={y2} className="sensor" key={i}></line>    
+  }
+}
+
+class Agent extends React.Component {
+  render() {
+    let agent = this.props.agent;
+    let p = agent.specification.definition.shape.map(p => `${p.x},${p.y}`).join(" ");
+    let rot = `rotate(${180*agent.position.theta/Math.PI})`;
+    let tra = `translate(${agent.position.x} ${agent.position.y})`;
+    return <g key={agent.id} transform={tra + rot}>
+        <polygon points={p} className="agent" style={agent.specification.style} />
+        {agent.sensors.map((value,i) => <Sensor key={i} />)}
+    </g>  
+  }
+}
+
+class Enviro extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,19 +84,10 @@ class MyComponent extends React.Component {
     let w = window.innerWidth;
     let h = window.innerHeight-41;    
     if (error) {
-      return <div className='message'>Error: {error.message}. Is the server running?</div>;
+      return <Error error={error}/>;
     } else if (!isLoaded) {
-      return <div className='message'>Loading ...</div>;
+      return <Loading />;
     } else {
-      const agent_list = data.agents.map(agent => {
-        let p = agent.specification.definition.shape.map(p => `${p.x},${p.y}`).join(" ");
-        let rot = `rotate(${180*agent.position.theta/Math.PI})`;
-        let tra = `translate(${agent.position.x} ${agent.position.y})`;
-        return <g key={agent.id} transform={tra + rot}>
-            <polygon points={p} className="agent" style={agent.specification.style}>
-            </polygon>
-        </g>
-      });
       let center = `translate(${w/2} ${h/2}) scale(2)`
       return (
         <div>
@@ -70,7 +97,7 @@ class MyComponent extends React.Component {
           </div>
           <svg width={w} height={h}>
             <g transform={center}>
-              {agent_list}
+              {data.agents.map(agent => <Agent agent={agent} key={agent.id} />)}
             </g>
           </svg>  
         </div>      
@@ -80,4 +107,4 @@ class MyComponent extends React.Component {
 }
 
 const domContainer = document.querySelector('#main_container');
-ReactDOM.render(e(MyComponent), domContainer);
+ReactDOM.render(e(Enviro), domContainer);

@@ -13,6 +13,7 @@
       "linear": 40,
       "rotational": 600
     },
+    "sensors": [],
     "mass": 1,    
     "controller": "lib/block.so"
 }

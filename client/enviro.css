@@ -19,6 +19,11 @@ body {
     stroke-width: 1
  }
 
+ .sensor {
+     stroke: #ddd;
+     stroke-width: 1;
+ }
+
  .message {
      padding: 16px;
      color: yellow;

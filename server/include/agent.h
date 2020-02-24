@@ -6,6 +6,7 @@
 #include "elma/elma.h"
 #include "chipmunk.h"
 #include "enviro.h"
+#include "sensor.h"
 
 #define DBG std::cout << __FILE__ << ":" << __LINE__ << "\n";
 
@@ -48,6 +49,11 @@ namespace enviro {
         inline void set_destroyer(void (*f)(Agent*)) { _destroyer = f; }
         inline int get_id() { return _id; }
 
+        inline cpVect position() const { return cpBodyGetPosition(_body); }
+        inline cpVect velocity() const { return cpBodyGetVelocity(_body); }
+        inline cpFloat angle() const { return cpBodyGetAngle(_body); }
+        inline cpFloat angular_velocity() const { return cpBodyGetAngularVelocity(_body); }
+
         //! Apply the given thrust and torque.
         void actuate(cpFloat thrust, cpFloat torque);
 
@@ -65,8 +71,14 @@ namespace enviro {
             return _specification["definition"]["friction"]["rotational"];
         } 
 
+        double sensor_value(int index);
+        std::vector<double> sensor_values();
+
         Agent& add_process(Process &p);
         Agent& add_process(StateMachine &m);
+
+        World * get_world_ptr() { return _world_ptr; }
+        cpShape * get_shape() { return _shape; }
 
         private:
         cpBody * _body;
@@ -75,6 +87,9 @@ namespace enviro {
         int _id;
         json _specification;
         std::vector<Process *> _processes;
+        std::vector<Sensor *> _sensors;
+        World * _world_ptr;
+        void setup_sensors();
 
         public:
         // Static methods

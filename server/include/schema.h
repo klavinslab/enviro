@@ -45,6 +45,12 @@ inline json ENVIRO_AGENT_SCHEMA = R"(
             "linear": 0,
             "rotational": 0
         },
+        "sensors": [
+            {
+                "location": { "x": 0, "y": 0 },
+                "direction": 0
+            }
+        ],
         "mass": 0,    
         "controller": ""
     }

@@ -1,5 +1,5 @@
 #
-# docker run -p80:80 -p8765:8765 -v $PWD:/development -it dev bash
+# docker run -p80:80 -p8765:8765 -v $PWD:/development -it enviro bash
 #
 
 # FROM klavins/elma:latest

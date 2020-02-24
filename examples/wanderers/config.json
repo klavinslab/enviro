@@ -9,20 +9,56 @@
             "definition": "defs/wanderer.json",
             "style": { "fill": "lightgreen", "stroke": "black" },
             "position": {
+                "x": -300, 
+                "y": -10, 
+                "theta": 0
+            }
+        },   
+        {
+            "definition": "defs/wanderer.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
+            "position": {
+                "x": 300, 
+                "y": 10, 
+                "theta": 3.14159
+            }
+        },          
+        {
+            "definition": "defs/wanderer.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
+            "position": {
                 "x": -100, 
                 "y": -10, 
                 "theta": 0
             }
-        },           
+        },   
+        {
+            "definition": "defs/wanderer.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
+            "position": {
+                "x": 100, 
+                "y": 10, 
+                "theta": 3.14159
+            }
+        },                  
         {
             "definition": "defs/block.json", 
-            "style": { "fill": "gray", "stroke": "black" },
+            "style": { "fill": "lightblue", "stroke": "black" },
             "position": {
                 "x": 0, 
                 "y": 0, 
                 "theta": 0.4
             }
-        }
+        },
+        {
+            "definition": "defs/block.json", 
+            "style": { "fill": "lightblue", "stroke": "black" },
+            "position": {
+                "x": -200, 
+                "y": 80, 
+                "theta": 0.4
+            }
+        }        
     ],
 
     "statics": [
@@ -61,7 +97,30 @@
                 { "x": 350,  "y": -190 },
                 { "x": -350, "y": -190 }
             ]
-        }                                                    
+        },
+
+        
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": 150, "y": -120 },
+                { "x": 150, "y": 120 },
+                { "x": 140, "y": 120 },
+                { "x": 140, "y": -120 }
+            ]
+        },
+
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -150, "y": -120 },
+                { "x": -150,  "y": 120 },
+                { "x": -140,  "y": 120 },
+                { "x": -140, "y": -120 }
+            ]
+        }        
+
+
     ]
 
 }

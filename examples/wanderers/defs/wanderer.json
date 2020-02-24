@@ -13,7 +13,24 @@
         "collision": 2,
         "linear": 10,
         "rotational": 200
-      },
+    },
+    "sensors": [
+        { 
+            "type": "range",
+            "location": { "x": 12, "y": 0 },
+            "direction": 0
+        },
+        { 
+            "type": "range",
+            "location": { "x": 0, "y": 10 },
+            "direction": 1.5707963267948966
+        },
+        { 
+            "type": "range",
+            "location": { "x": 0, "y": -10 },
+            "direction": -1.5707963267948966
+        }                
+    ],
     "mass": 0.25,
     "controller": "lib/wanderer.so"
 }
