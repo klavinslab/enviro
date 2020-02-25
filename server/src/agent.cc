@@ -119,14 +119,14 @@ namespace enviro {
         }
     }
 
-    void Agent::actuate(cpFloat thrust, cpFloat torque) {
+    Agent& Agent::apply_force(cpFloat thrust, cpFloat torque) {
 
-        if ( _specification["definition"]["type"] == "static" ) {
-            return;
+        if ( is_static() ) {
+            return *this;
         }
 
-        cpFloat kL = _specification["definition"]["friction"]["linear"].get<cpFloat>();  
-        cpFloat kR = _specification["definition"]["friction"]["rotational"].get<cpFloat>();
+        cpFloat kL = linear_friction();  
+        cpFloat kR = rotational_friction();
 
         cpVect f = { 
             x: thrust * cos(angle()),
@@ -138,22 +138,25 @@ namespace enviro {
         cpBodySetForce(_body, F );
         cpBodySetTorque(_body, torque - kR * angular_velocity() );
 
+        return *this;
+
     }
 
-    void Agent::servo(cpFloat linear_velocity_target, cpFloat angular_velocity_target) {
+    Agent& Agent::track_velocity(cpFloat linear_velocity_target, cpFloat angular_velocity_target, 
+                                 cpFloat kL, cpFloat kR) {
 
-        cpFloat V = velocity().x * cos(angle());  // this should be the x component of the 
+        cpFloat V = velocity().x * cos(angle());  // this is the x component of the 
                                                   // current velocity vector projected
                                                   // along the vector [1,0].
-        actuate(
-            linear_friction()*(linear_velocity_target - V), 
-            rotational_friction()*(angular_velocity_target-angular_velocity())
+        return apply_force(
+            kL*(linear_velocity_target - V), 
+            kR*(angular_velocity_target-angular_velocity())
         );
 
     }
 
-    void Agent::damp_movement() {
-        servo(0,0);
+    Agent& Agent::damp_movement() {
+        return track_velocity(0,0);
     }
 
     Agent& Agent::add_process(Process &p) {

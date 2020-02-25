@@ -27,6 +27,7 @@ namespace enviro {
         private:
 
         void get_state(uWS::HttpResponse<true> *res, uWS::HttpRequest *req);
+        void process_client_event(uWS::HttpResponse<true> *res, uWS::HttpRequest *req);
         void listen(us_listen_socket_t * token);
 
         World& world;

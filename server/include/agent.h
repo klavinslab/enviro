@@ -36,49 +36,46 @@ namespace enviro {
         friend class World;
 
         public:
+
         Agent(json specification, World& world);
+        Agent& add_process(Process &p);
+        Agent& add_process(StateMachine &m);
+        json serialize();
+        inline void set_destroyer(void (*f)(Agent*)) { _destroyer = f; }     
         ~Agent();
 
+        // Elma Process methods
         void init();
         void start();
         void update();
         void stop();
 
-        Agent& apply_force(int index, cpFloat magnitude);
-        json serialize();
-        inline void set_destroyer(void (*f)(Agent*)) { _destroyer = f; }
-        inline int get_id() { return _id; }
-
+        // State getters
         inline cpVect position() const { return cpBodyGetPosition(_body); }
         inline cpVect velocity() const { return cpBodyGetVelocity(_body); }
         inline cpFloat angle() const { return cpBodyGetAngle(_body); }
         inline cpFloat angular_velocity() const { return cpBodyGetAngularVelocity(_body); }
 
-        //! Apply the given thrust and torque.
-        void actuate(cpFloat thrust, cpFloat torque);
+        // Actuators
+        Agent& apply_force(cpFloat thrust, cpFloat torque);
+        Agent& track_velocity(cpFloat linear_velocity, cpFloat angular_velocity, cpFloat kL=10, cpFloat kR=200);
+        Agent& damp_movement();
 
-        //! Attempt to track a given linear and angular velocity.
-        void servo(cpFloat linear_velocity, cpFloat angular_velocity);
+        // Parameter getters
+        inline json definition() const { return  _specification["definition"]; }
+        inline json friction() const { return definition()["friction"]; }
+        inline double linear_friction() const { return friction()["linear"].get<cpFloat>(); }
+        inline double rotational_friction() const { return friction()["rotational"].get<cpFloat>(); }
+        inline bool is_static() const { return _specification["definition"]["type"] == "static"; }
 
-        //! Slow the agent down
-        void damp_movement();
-
-        inline double linear_friction() const {
-            return _specification["definition"]["friction"]["linear"];
-        }
-
-        inline double rotational_friction() const {
-            return _specification["definition"]["friction"]["rotational"];
-        } 
-
+        // Sensor methods
         double sensor_value(int index);
         std::vector<double> sensor_values();
 
-        Agent& add_process(Process &p);
-        Agent& add_process(StateMachine &m);
-
-        World * get_world_ptr() { return _world_ptr; }
-        cpShape * get_shape() { return _shape; }
+        // Other getters
+        inline World * get_world_ptr() { return _world_ptr; }
+        inline cpShape * get_shape() { return _shape; } 
+        inline int get_id() { return _id; }  
 
         private:
         cpBody * _body;
@@ -91,9 +88,10 @@ namespace enviro {
         World * _world_ptr;
         void setup_sensors();
 
-        public:
         // Static methods
 
+        public:
+        
         //! This method creates a new agent using the json specification and the
         //! DLL it points to. This can't be a constructor because it actually
         //! builds a class that derives from Agent, but is not the Agent class
