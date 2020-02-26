@@ -47,3 +47,14 @@ And to run an example, do
 ```
 
 After which the client should be showing some robots moving around.
+
+To build a new project, do
+```bash
+mkdir my_project
+cd my_project
+esm init
+esm generate MyAgent
+make
+```
+
+and you'll have a new project. You can start adding code to `src/my_agent.h` and so on.

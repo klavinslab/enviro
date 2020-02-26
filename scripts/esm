@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+const { exec } = require('child_process');
+
+var DIR = "/workspaces/enviro/scripts/lib"
+var command = process.argv[2];
+
+function camelToSnake(string) {
+    return string.replace(/[\w]([A-Z])/g, function(m) {
+        return m[0] + "_" + m[1];
+    }).toLowerCase();
+}
+
+switch(command) {
+
+    case "init":
+        exec(`cp -r ${DIR}/template/* .`, (err, stdout, stderr) => {
+            if (err) {
+                console.log("Could not copy Enviro template files to current directory.")
+            } else {
+                console.log("Initialied enviro project. Have fun!");
+            }
+        });
+        break;
+
+    case "generate":
+        var class_name = process.argv[3];
+
+        if ( class_name ) {
+
+            let file_name = camelToSnake(class_name);
+
+            fs.readFile(`${DIR}/agent.cc`, 'ascii', function(err, contents) {
+                contents = contents.replace(/_FILE_NAME_/g, file_name)
+                                   .replace(/_CLASS_NAME_/g, class_name);
+                fs.writeFile(`src/${file_name}.cc`, contents, err => {
+                    if (err) {
+                        console.log("Could not write .cc file. Does src file exists and is it writable?")
+                    }
+                });
+            }); 
+            
+            fs.readFile(`${DIR}/agent.h`, 'ascii', function(err, contents) {
+                contents = contents.replace(/_FILE_NAME_/g, file_name)
+                                   .replace(/_CLASS_NAME_/g, class_name)
+                                   .replace(/_DEF_NAME_/g, file_name.toUpperCase());
+                fs.writeFile(`src/${file_name}.h`, contents, err => {
+                    if (err) {
+                        console.log("Could not write .h file. Does src file exists and is it writable?")
+                    }
+                });
+            });    
+            
+            fs.readFile(`${DIR}/agent.json`, 'ascii', function(err, contents) {
+                contents = contents.replace(/_FILE_NAME_/g, file_name)
+                                   .replace(/_CLASS_NAME_/g, class_name);
+                fs.writeFile(`defs/${file_name}.json`, contents, err => {
+                    if (err) {
+                        console.log("Could not write .json file. Does src file exists and is it writable?")
+                    }
+                });
+            });               
+
+        } else {
+            console.log("No class name suggested");
+        }
+        break;
+
+    default: 
+    console.log(`unknown command: ${command}`);
+
+}

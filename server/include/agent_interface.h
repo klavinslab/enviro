@@ -20,10 +20,11 @@ namespace enviro {
         int id();
 
         // Actuators
-        void apply_force(cpFloat thrust, cpFloat torque);
-        void track_velocity(cpFloat linear_velocity, cpFloat angular_velocity, 
-                            cpFloat kL=10, cpFloat kR=200);
+        void apply_force(double thrust, double torque);
+        void track_velocity(double linear_velocity, double angular_velocity, 
+                            double kL=10, double kR=200);
         void damp_movement();      
+        void teleport(double x, double y, double theta);
 
         // Sensors
         double sensor_value(int index);

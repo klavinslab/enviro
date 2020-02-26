@@ -159,6 +159,14 @@ namespace enviro {
         return track_velocity(0,0);
     }
 
+    Agent& Agent::teleport(cpFloat x, cpFloat y, cpFloat theta) {
+        cpBodySetPosition(_body, {x: x, y: y});
+        cpBodySetAngle(_body, theta);
+        cpBodySetVelocity(_body, {x:0, y:0});
+        cpBodySetAngularVelocity(_body,0);
+        return *this;
+    }
+
     Agent& Agent::add_process(Process &p) {
         _processes.push_back(&p);
         AgentInterface * ai = dynamic_cast<AgentInterface *>(&p);

@@ -51,9 +51,8 @@ namespace enviro {
     void WorldServer::process_client_event(uWS::HttpResponse<true> *res, uWS::HttpRequest *req) {
         res->onData([this,res](std::string_view body, bool last) {
             json data = json::parse(body);
-            std::cout << "Got data: " << data.dump() << ", it's the last: " << last << std::endl;
             manager_mutex.lock(); ///////////////////////////////////////////////        
-            world.emit(Event(data["type"], data));                                //
+            world.emit(Event(data["type"], data));                             //
             manager_mutex.unlock(); /////////////////////////////////////////////            
         });   
         json result = {

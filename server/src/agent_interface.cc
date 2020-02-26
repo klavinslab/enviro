@@ -35,13 +35,13 @@ cpFloat AgentInterface::angular_velocity() {
 }
 
 // Actuators
-void AgentInterface::apply_force(cpFloat thrust, cpFloat torque) {
+void AgentInterface::apply_force(double thrust, double torque) {
     ASSERT_AGENT_EXISTS("apply_force");
     agent->apply_force(thrust, torque);
 }
 
-void AgentInterface::track_velocity(cpFloat linear_velocity, cpFloat angular_velocity,
-                                    cpFloat kL, cpFloat kR) {
+void AgentInterface::track_velocity(double linear_velocity, double angular_velocity,
+                                    double kL, double kR) {
     ASSERT_AGENT_EXISTS("track_velocity");
     agent->track_velocity(linear_velocity, angular_velocity, kL, kR);
 }
@@ -50,6 +50,12 @@ void AgentInterface::damp_movement() {
     ASSERT_AGENT_EXISTS("damp_movement");
     agent->damp_movement();
 }   
+
+void AgentInterface::teleport(double x, double y, double theta) {
+    ASSERT_AGENT_EXISTS("teleport");
+    agent->teleport(x,y,theta);
+}   
+
 
 // Sensors
 double AgentInterface::sensor_value(int index) {
