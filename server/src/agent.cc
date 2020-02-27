@@ -171,7 +171,7 @@ namespace enviro {
         return a;
     }
 
-    Agent& Agent::move_toward(cpFloat x, cpFloat y) {
+    Agent& Agent::move_toward(cpFloat x, cpFloat y, double vF, double vR) {
 
         cpVect p = position();
         double f = 0,
@@ -182,7 +182,7 @@ namespace enviro {
         f = d < 10 ? 0.1*d : 1;
         f = f * exp(-4*theta_error*theta_error);
         t = theta_error;
-        apply_force(50*f, -10*t);
+        apply_force(vF*f, -vR*t);
 
         return *this;
     }

@@ -56,9 +56,9 @@ void AgentInterface::teleport(double x, double y, double theta) {
     agent->teleport(x,y,theta);
 }   
 
-void AgentInterface::move_toward(double x, double y) {
+void AgentInterface::move_toward(double x, double y, double vF, double vR) {
     ASSERT_AGENT_EXISTS("move_toward");
-    agent->move_toward(x,y);  
+    agent->move_toward(x,y,vF,vR);  
 }
 
 // Sensors
