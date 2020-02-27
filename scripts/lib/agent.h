@@ -20,11 +20,10 @@ class _CLASS_NAME_Controller : public Process, public AgentInterface {
 class _CLASS_NAME_ : public Agent {
     public:
     _CLASS_NAME_(json spec, World& world) : Agent(spec, world) {
-        add_process(bc);
+        add_process(c);
     }
     private:
-    _CLASS_NAME_Controller bc;
-
+    _CLASS_NAME_Controller c;
 };
 
 DECLARE_INTERFACE(_CLASS_NAME_)
