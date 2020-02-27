@@ -159,6 +159,36 @@ namespace enviro {
         return track_velocity(0,0);
     }
 
+    double normalize_angle(double angle) {
+        // Returns a in the range -pi, pi
+        double a = angle;
+        while ( a > M_PI ) {
+            a -= 2*M_PI;
+        }
+        while ( a < -M_PI ) {
+            a += 2*M_PI;
+        }
+        return a;
+    }
+
+    Agent& Agent::move_toward(cpFloat x, cpFloat y) {
+
+        cpVect p = position();
+        double f = 0,
+               theta_error = normalize_angle(angle() - atan2(y - p.y, x - p.x)),
+               d = cpvdist(p,cpv(x,y)),
+               t = sin(theta_error);
+
+        f = d < 10 ? 0.1*d : 1;
+        f = f * exp(-4*theta_error*theta_error);
+
+        t = theta_error;
+
+        apply_force(50*f, -10*t);
+
+        return *this;
+    }
+
     Agent& Agent::teleport(cpFloat x, cpFloat y, cpFloat theta) {
         cpBodySetPosition(_body, {x: x, y: y});
         cpBodySetAngle(_body, theta);

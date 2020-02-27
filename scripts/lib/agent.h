@@ -8,11 +8,11 @@ using namespace enviro;
 class _CLASS_NAME_Controller : public Process, public AgentInterface {
 
     public:
-    _CLASS_NAME_Controller();
+    _CLASS_NAME_Controller() : Process(), AgentInterface() {}
 
     void init() {}
     void start() {}
-    void update();
+    void update() {}
     void stop() {}
 
 };

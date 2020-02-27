@@ -1,0 +1,21 @@
+{
+    "name": "Chaser",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": [
+      { "x": -10, "y": 10 },
+      { "x": 10, "y": 10 },
+      { "x": 12, "y": 0 },
+      { "x": 10, "y": -10 },
+      { "x": -10, "y": -10 }
+  ],
+  "friction": {
+      "collision": 2,
+      "linear": 10,
+      "rotational": 200
+  },
+  "sensors": [],
+  "mass": 0.25,
+  "controller": "lib/chaser.so"
+}
+}

@@ -39,7 +39,7 @@ switch(command) {
                         console.log("Could not write .cc file. Does src file exists and is it writable?")
                     }
                 });
-            }); 
+            });
             
             fs.readFile(`${DIR}/agent.h`, 'ascii', function(err, contents) {
                 contents = contents.replace(/_FILE_NAME_/g, file_name)
@@ -50,7 +50,7 @@ switch(command) {
                         console.log("Could not write .h file. Does src file exists and is it writable?")
                     }
                 });
-            });    
+            });
             
             fs.readFile(`${DIR}/agent.json`, 'ascii', function(err, contents) {
                 contents = contents.replace(/_FILE_NAME_/g, file_name)
@@ -60,7 +60,7 @@ switch(command) {
                         console.log("Could not write .json file. Does src file exists and is it writable?")
                     }
                 });
-            });               
+            });
 
         } else {
             console.log("No class name suggested");

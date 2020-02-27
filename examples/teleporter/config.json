@@ -4,7 +4,25 @@
     "ip": "0.0.0.0",
     "port": 8765,
 
-    "agents": [    
+    "agents": [   
+        {
+            "definition": "defs/teleporter.json",
+            "style": { "fill": "orange", "stroke": "black" },
+            "position": {
+                "x": 0, 
+                "y": 0, 
+                "theta": 0
+            }
+        },
+        {
+            "definition": "defs/chaser.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
+            "position": {
+                "x": 110, 
+                "y": 110, 
+                "theta": 1.5
+            }
+        }                         
     ],
 
     "statics": [

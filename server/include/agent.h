@@ -60,6 +60,7 @@ namespace enviro {
         Agent& apply_force(cpFloat thrust, cpFloat torque);
         Agent& track_velocity(cpFloat linear_velocity, cpFloat angular_velocity, cpFloat kL=10, cpFloat kR=200);
         Agent& damp_movement();
+        Agent& move_toward(cpFloat x, cpFloat y);
         Agent& teleport(cpFloat x, cpFloat y, cpFloat theta);
 
         // Parameter getters

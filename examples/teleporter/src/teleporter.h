@@ -8,16 +8,28 @@ using namespace enviro;
 class TeleporterController : public Process, public AgentInterface {
 
     public:
-    TeleporterController();
+    TeleporterController() : Process(), AgentInterface() {}
 
-    void init() {}
+    void init() {
+        watch("screen_click", [this](Event e) {
+            teleport(e.value()["x"], e.value()["y"], 0);
+            emit(Event("goal_change", { 
+                { "x", e.value()["x"] }, 
+                { "y", e.value()["y"] } 
+            }));
+        });
+    }
+
     void start() {}
-    void update();
+    void update(){
+        damp_movement();
+    }
     void stop() {}
 
 };
 
 class Teleporter : public Agent {
+
     public:
     Teleporter(json spec, World& world) : Agent(spec, world) {
         add_process(bc);

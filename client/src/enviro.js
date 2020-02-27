@@ -45,12 +45,18 @@ function post_event(data) {
 
 class Agent extends React.Component {
 
+  findSize(el) {
+    if(el) {
+      this.rect = el.getBoundingClientRect();
+    }
+  }  
+
   click(e) {
     post_event({
       type: "agent_click",
       id: this.props.agent.id,
-      x: e.clientX,
-      y: e.clientY
+      x: e.clientX - this.rect.left - this.rect.width/2,
+      y: e.clientY - this.rect.top - this.rect.height/2
     });
     e.stopPropagation();
   }
@@ -60,7 +66,7 @@ class Agent extends React.Component {
     let p = agent.specification.definition.shape.map(p => `${p.x},${p.y}`).join(" ");
     let rot = `rotate(${180*agent.position.theta/Math.PI})`;
     let tra = `translate(${agent.position.x} ${agent.position.y})`;
-    return <g key={agent.id} transform={tra + rot}>
+    return <g key={agent.id} transform={tra + rot} ref={el => this.findSize(el)}>
         <polygon points={p} className="agent" style={agent.specification.style} onClick={e=> this.click(e) }/>
         {agent.sensors.map((value,i) => <Sensor value={value} agent={agent} i={i} key={i} />)}
     </g>  
@@ -70,19 +76,28 @@ class Agent extends React.Component {
 
 class Arena extends React.Component {
 
+  findSize(el) {
+    if(el) {
+      this.rect = el.getBoundingClientRect();
+    }
+  }
+
   click(e) {
 
-   post_event({
-      type: "screen_click",
-      x: e.clientX,
-      y: e.clientY
+    post_event({
+       type: "screen_click",
+       x: e.clientX - this.rect.left - this.rect.width/2,
+       y: e.clientY - this.rect.top - this.rect.height/2
     });
 
   }
 
   render() {
-    let center = `translate(${this.props.w/2} ${this.props.h/2}) scale(2)`;
-    return <svg width={this.props.w} height={this.props.h} onClick={e => this.click(e)}>
+    let center = `translate(${this.props.w/2} ${this.props.h/2}) scale(1)`;
+    return <svg width={this.props.w} 
+                height={this.props.h} 
+                onClick={e => this.click(e)}
+                ref={el => this.findSize(el)}>
       <g transform={center}>
         {this.props.data.agents.map(agent => <Agent agent={agent} key={agent.id} />)}
       </g>
