@@ -24,7 +24,7 @@ namespace enviro {
         void track_velocity(double linear_velocity, double angular_velocity, 
                             double kL=75, double kR=20);
         void damp_movement();  
-        void move_toward(double x, double y, double vF=10, double vR=200);
+        void move_toward(double x, double y, double vF=10, double vR=10);
         void teleport(double x, double y, double theta);
 
         // Sensors

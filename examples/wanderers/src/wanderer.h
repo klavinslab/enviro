@@ -38,14 +38,6 @@ namespace {
 
         }
 
-        void init() {
-            watch("agent_click", [this](Event e) {
-                if ( e.value()["id"] == id() ) {
-                    std::cout << "Wanderer received: " << e.value().dump() << "\n";
-                }
-            });
-        }
-
         void update() {
             if ( rand() % 100 <= 5 ) {
                 emit(Event(tick_name));
