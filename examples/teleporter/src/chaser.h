@@ -36,7 +36,6 @@ class Chaser : public Agent {
     }
     private:
     ChaserController bc;
-
 };
 
 DECLARE_INTERFACE(Chaser)

@@ -2,7 +2,8 @@
 # docker run -p80:80 -p8765:8765 -v $PWD:/development -it enviro bash
 #
 
-FROM klavins/elma:latest
+# FROM klavins/elma:latest
+FROM elma
 
 RUN apt-get update && \
     apt-get install -y git && \
@@ -46,23 +47,10 @@ RUN git clone https://github.com/uNetworking/uWebSockets.git
 RUN mv /tmp/uWebSockets/src /usr/local/include/uWebSockets
 RUN rm -r /tmp/uWebSockets
 
-# Install enviro
-WORKDIR /tmp
-WORKDIR /usr/local/src
-RUN git clone https://github.com/klavinslab/enviro.git
-WORKDIR /usr/local/src/enviro/server
-RUN make -j 4
-WORKDIR /usr/local/src/enviro/client
-RUN npm install 
-RUN (export NODE_ENV=production; npx babel src/enviro.js --out-file enviro.js)
-RUN chmod 755 /usr/local/src/enviro/scripts/start.sh
+# Get ready to write some code
+RUN mkdir /development
+WORKDIR /development
 
 # expose ports
 EXPOSE 80
 EXPOSE 8765
-
-# start web server
-CMD ["sh", "-c", "touch", "/tmp/issues"]
-# CMD ["/usr/local/src/enviro/scripts/start.sh > /tmp/issues"]
-
-WORKDIR /source

@@ -2,8 +2,9 @@
 
 var fs = require('fs');
 const { exec } = require('child_process');
+var spawn = require('child_process').spawn;
 
-var DIR = "/workspaces/enviro/scripts/lib"
+var DIR = "/usr/local/src/enviro/scripts/lib"
 var command = process.argv[2];
 
 function camelToSnake(string) {
@@ -13,6 +14,13 @@ function camelToSnake(string) {
 }
 
 switch(command) {
+
+    case "start":
+        spawn('/usr/local/src/enviro/scripts/start.sh', [], {
+            stdio: 'ignore',
+            detached: true
+        });
+        break;
 
     case "init":
         exec(`cp -r ${DIR}/template/* .`, (err, stdout, stderr) => {

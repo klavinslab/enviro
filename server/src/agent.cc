@@ -181,9 +181,7 @@ namespace enviro {
 
         f = d < 10 ? 0.1*d : 1;
         f = f * exp(-4*theta_error*theta_error);
-
         t = theta_error;
-
         apply_force(50*f, -10*t);
 
         return *this;

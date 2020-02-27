@@ -15,7 +15,8 @@ CHIPDIR     := /usr/local/src/Chipmunk2D
 ELMADIR     := /development/elma
 
 #Flags, Libraries and Includes
-CFLAGS      := -ggdb -export-dynamic
+# CFLAGS      := -ggdb -export-dynamic
+CFLAGS      := -O3 -export-dynamic
 LIB         := -lgtest -lpthread -lelma -lchipmunk -ldl -luSockets -lz #  -lssl -lcrypto 
 INC         := -I $(INCDIR) -I $(CHIPDIR)/include/chipmunk -I $(ELMADIR)/include -I /usr/local/include/uSockets
 LIBDIR      := -L $(CHIPDIR)/build/src -L $(ELMADIR)/lib -L /usr/local/lib/uSockets
