@@ -47,7 +47,6 @@ RUN mv /tmp/uWebSockets/src /usr/local/include/uWebSockets
 RUN rm -r /tmp/uWebSockets
 
 # Install enviro
-WORKDIR /tmp
 WORKDIR /usr/local/src
 RUN git clone https://github.com/klavinslab/enviro.git
 WORKDIR /usr/local/src/enviro/server
