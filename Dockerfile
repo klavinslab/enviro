@@ -47,7 +47,6 @@ RUN mv /tmp/uWebSockets/src /usr/local/include/uWebSockets
 RUN rm -r /tmp/uWebSockets
 
 # Install enviro
-WORKDIR /tmp
 WORKDIR /usr/local/src
 RUN git clone https://github.com/klavinslab/enviro.git
 WORKDIR /usr/local/src/enviro/server
@@ -56,6 +55,7 @@ WORKDIR /usr/local/src/enviro/client
 RUN npm install 
 RUN (export NODE_ENV=production; npx babel src/enviro.js --out-file enviro.js)
 RUN chmod 755 /usr/local/src/enviro/scripts/start.sh
+RUN cp /usr/local/src/enviro/config/bashrc /.bashrc
 
 # expose ports
 EXPOSE 80
@@ -63,6 +63,5 @@ EXPOSE 8765
 
 # start web server
 CMD ["sh", "-c", "touch", "/tmp/issues"]
-# CMD ["/usr/local/src/enviro/scripts/start.sh > /tmp/issues"]
 
 WORKDIR /source
