@@ -11,6 +11,12 @@ using namespace std::chrono;
 using namespace elma;
 using namespace enviro;
 
+class DummyState : public State {
+    void entry(const Event& e) { emit(Event("dummy")); }
+    void during() {}
+    void exit(const Event& e) {}
+};
+
 int main() {
 
     json config = json_helper::read("config.json");
@@ -20,10 +26,11 @@ int main() {
     World world(config);
     StateMachine sm; // This is here just so the enviro executable includes
                      // state machines from libelma.a. Weird.
+    DummyState state;
 
     WorldServer world_server(
-        world, 
-        m.get_update_mutex(), 
+        world,
+        m.get_update_mutex(),
         config
     );
 
