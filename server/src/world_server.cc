@@ -49,18 +49,22 @@ namespace enviro {
     } 
 
     void WorldServer::process_client_event(uWS::HttpResponse<true> *res, uWS::HttpRequest *req) {
-        res->onData([this,res](std::string_view body, bool last) {
-            json data = json::parse(body);
-            manager_mutex.lock(); ///////////////////////////////////////////////        
-            world.emit(Event(data["type"], data));                             //
-            manager_mutex.unlock(); /////////////////////////////////////////////            
-        });   
+        std::string buffer;
+        res->onData([this,res,buffer=std::move(buffer)](std::string_view data, bool last) mutable {
+            buffer.append(data.data(), data.length());
+            if ( last ) {
+                json data = json::parse(buffer);
+                manager_mutex.lock(); ///////////////////////////////////////////////        
+                world.emit(Event(data["type"], data));                             //
+                manager_mutex.unlock(); /////////////////////////////////////////////            
+            }
+        });
         json result = {
             { "result", "ok" },
             { "timestamp", unix_timestamp() }
         };
         res->writeHeader("Access-Control-Allow-Origin", "*");
-        res->end(result.dump().c_str());    
+        res->end(result.dump().c_str());            
     }
 
     void WorldServer::listen(us_listen_socket_t * token) {

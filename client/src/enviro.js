@@ -106,10 +106,26 @@ class Arena extends React.Component {
 }
 
 class Taskbar extends React.Component {
+
+  click(e, value) {
+
+    post_event({
+       type: "button_click",
+       value: value
+    });
+
+  }  
+
   render() {
+    let date = new Date(this.props.data.timestamp * 1000).toLocaleTimeString("en-US")
     return <div id="title-container">
       <span id="title">ENVIRO: </span>
-      <span>{this.props.data.timestamp}</span>
+      <span>{date}</span>
+      <div className="buttons">
+        <button className='action-button' onClick={e => this.click(e, "start")}>Start</button>
+        <button className='action-button' onClick={e => this.click(e, "stop")}>Stop</button>
+        <button className='action-button' onClick={e => this.click(e, "reset")}>Reset</button>        
+      </div>
     </div>
   }
 }
@@ -125,9 +141,37 @@ class Enviro extends React.Component {
   }
 
   componentDidMount() {
+
     this.interval = setInterval(() => {
         this.tick();
     }, 25);
+
+    document.addEventListener("keydown", e => {
+      console.log(e);
+      post_event({
+        type: "keydown",
+        key: e.key,
+        ctrlKey: e.ctrlKey,
+        shiftKey: e.shiftKey,
+        altKey: e.altKey,
+        metaKey: e.metaKey,
+        repeat: e.repeat  
+      });
+    });
+
+    document.addEventListener("keyup", e => {
+      console.log(e);
+      post_event({
+        type: "keyup",
+        key: e.key,
+        ctrlKey: e.ctrlKey,
+        shiftKey: e.shiftKey,
+        altKey: e.altKey,
+        metaKey: e.metaKey,
+        repeat: e.repeat  
+      });
+    });    
+
   }
 
   tick() {
