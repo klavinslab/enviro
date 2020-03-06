@@ -18,6 +18,7 @@ namespace enviro {
     void WorldServer::run() {
 
         uWS::SSLApp app = uWS::SSLApp()    // TODO: cast insteead of wrap where
+          .get("/config", [&](auto *res, auto *req) { get_config(res,req); })
           .get("/state",  [&](auto *res, auto *req) { get_state(res,req); })
           .post("/event", [&](auto *res, auto *req) { process_client_event(res,req); })
           .listen(port,   [&](auto *token)          { listen(token);      })
@@ -26,6 +27,19 @@ namespace enviro {
         throw std::runtime_error("Server run returned, which it shouldn't do.");
 
     }
+
+    void WorldServer::get_config(uWS::HttpResponse<true> *res, uWS::HttpRequest *req) {
+        
+        json result = {
+            { "result", "ok" },
+            { "timestamp", unix_timestamp() },
+            { "config", world.get_config() }
+        };
+        
+        res->writeHeader("Access-Control-Allow-Origin", "*");
+        res->end(result.dump().c_str());
+
+    }     
 
     void WorldServer::get_state(uWS::HttpResponse<true> *res, uWS::HttpRequest *req) {
 

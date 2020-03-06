@@ -33,11 +33,25 @@ body {
  .buttons {
     position: absolute;
     right: 10px;
-    top: 10px;     
+    top: 5px;     
  }
 
  .action-button {
-     margin: 0 2px 0 2px;
+     margin: 0 4px 0 4px;
+     border-radius: 4px;
+     border-width: 1pt;
+     height: 30px;
+     font-size: 14pt;
  }
 
- button:focus {outline:0;}
+.action-button:hover {
+     cursor: pointer;
+ }
+
+.action-button:active {
+    box-shadow: 0px 0px 5px grey;
+} 
+
+ button:focus {
+     outline:0;
+}

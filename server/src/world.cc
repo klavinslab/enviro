@@ -4,7 +4,7 @@
 
 namespace enviro {
 
-    World::World(json config) : Process("World") {
+    World::World(json config) : Process("World"), config(config) {
 
         space = cpSpaceNew();
         timeStep = 1.0/60.0; // TODO: move to config.json

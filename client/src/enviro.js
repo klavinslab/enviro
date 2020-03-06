@@ -40,7 +40,7 @@ function post_event(data) {
     headers: { 'Content-Type': 'application/json'},
     body: JSON.stringify(data)
   }).then(res => { return JSON.parse(res.body) })
-    .catch(error => { console.log("Screen click error: ", error) });  
+    .catch(error => { console.log("JSON parse error in post response: ", error) });  
 }
 
 class Agent extends React.Component {
@@ -114,7 +114,7 @@ class Taskbar extends React.Component {
        value: value
     });
 
-  }  
+  } 
 
   render() {
     let date = new Date(this.props.data.timestamp * 1000).toLocaleTimeString("en-US")
@@ -122,32 +122,86 @@ class Taskbar extends React.Component {
       <span id="title">ENVIRO: </span>
       <span>{date}</span>
       <div className="buttons">
-        <button className='action-button' onClick={e => this.click(e, "start")}>Start</button>
-        <button className='action-button' onClick={e => this.click(e, "stop")}>Stop</button>
-        <button className='action-button' onClick={e => this.click(e, "reset")}>Reset</button>        
+        {this.props.buttons.map(button => 
+          <button key={button.label}
+                  className='action-button'
+                  style={button.style}
+                  onClick={e => this.click(e, button.name)}>
+            {button.label}
+          </button>)}
       </div>
     </div>
   }
 }
 
-class Enviro extends React.Component {
+class Enviro extends React.Component { 
+
   constructor(props) {
     super(props);
     this.state = {
       error: null,
-      isLoaded: false, 
+      mode: "uninitialized",
       items: []
     };
   }
 
+  update() {
+
+    if ( this.state.mode == "connecting" ) {
+      this.get_configuration();
+    } else if ( this.state.mode == "connected" ) {
+      this.tick();
+    }
+
+  }
+
+  get_configuration() {
+    fetch("http://127.0.0.1:8765/config")
+      .then(res => res.json())
+      .then(
+        res => {
+          console.log("got config", res.config);
+          this.setState({ mode: "connected", config: res.config }, () => {
+            setTimeout(() => { this.update() } , 25);
+          });
+        },
+        error => {
+          this.setState({ mode: "connecting", config: null }, () => {
+            setTimeout(() => { this.update() } , 1000);
+          });
+        }
+      )
+  }
+
+  tick() {
+    fetch("http://127.0.0.1:8765/state")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            mode: "connected",
+            data: result,
+            error: false
+          }, () => {
+            setTimeout(() => { this.update() } , 25);
+          });
+        },
+        (error) => {
+          this.setState({
+            mode: "connecting",
+            error
+          }, () => {
+            setTimeout(() => { this.update() } , 1000);
+          });
+        }
+      )
+  }
+
   componentDidMount() {
 
-    this.interval = setInterval(() => {
-        this.tick();
-    }, 25);
+    this.setState({ mode: "connecting" }, this.update);
 
     document.addEventListener("keydown", e => {
-      console.log(e);
       post_event({
         type: "keydown",
         key: e.key,
@@ -160,7 +214,6 @@ class Enviro extends React.Component {
     });
 
     document.addEventListener("keyup", e => {
-      console.log(e);
       post_event({
         type: "keyup",
         key: e.key,
@@ -174,38 +227,18 @@ class Enviro extends React.Component {
 
   }
 
-  tick() {
-    fetch("http://127.0.0.1:8765/state")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            data: result,
-            error: false
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
-  }
-
   render() {
-    const { error, isLoaded, data } = this.state;
+    const { mode, error, data, config } = this.state;
     let w = window.innerWidth;
     let h = window.innerHeight-41;    
     if (error) {
       return <Error error={error}/>;
-    } else if (!isLoaded) {
+    } else if (mode == "connecting" || !data) {
       return <Loading />;
     } else {
       return (
         <div>
-          <Taskbar data={data} />
+          <Taskbar data={data} buttons={config.buttons} />
           <Arena w={w} h={h} data={data} />
         </div>      
       );

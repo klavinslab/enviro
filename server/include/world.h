@@ -28,11 +28,13 @@ namespace enviro {
         inline cpSpace * get_space() { return space; }
         World& add_agent(Agent& agent);
         World& all(std::function<void(Agent&)> f);
+        inline json get_config() const { return config; }
 
         private:
         vector<Agent *> agents;
         cpSpace * space;
         cpFloat timeStep;
+        json config;
 
     };
 
