@@ -15,7 +15,10 @@ class Loading extends React.Component {
 
 class Error extends React.Component {
   render() {
-    return <div className='message'>Error: {this.props.error.message}. Is the server running?</div>
+    return <div className='message'>
+      Enviro Error: {this.props.error.message}. Is the server running?
+      See <a href="https://github.com/klavinslab/enviro" target="enviro-github">here</a> for help.
+    </div>
   }
 }
 
@@ -117,10 +120,8 @@ class Taskbar extends React.Component {
   } 
 
   render() {
-    let date = new Date(this.props.data.timestamp * 1000).toLocaleTimeString("en-US")
     return <div id="title-container">
-      <span id="title">ENVIRO: </span>
-      <span>{date}</span>
+      <span id="title">ENVIRO: {this.props.name}</span>  
       <div className="buttons">
         {this.props.buttons.map(button => 
           <button key={button.label}
@@ -134,7 +135,7 @@ class Taskbar extends React.Component {
   }
 }
 
-class Enviro extends React.Component { 
+class Enviro extends React.Component {  
 
   constructor(props) {
     super(props);
@@ -166,7 +167,7 @@ class Enviro extends React.Component {
           });
         },
         error => {
-          this.setState({ mode: "connecting", config: null }, () => {
+          this.setState({ mode: "connecting", config: null, error: { message: "No connection" }}, () => {
             setTimeout(() => { this.update() } , 1000);
           });
         }
@@ -238,7 +239,7 @@ class Enviro extends React.Component {
     } else {
       return (
         <div>
-          <Taskbar data={data} buttons={config.buttons} />
+          <Taskbar name={config.name} data={data} buttons={config.buttons} />
           <Arena w={w} h={h} data={data} />
         </div>      
       );

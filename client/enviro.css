@@ -11,6 +11,7 @@ body {
 
 #title {
     font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
  }
 
  .agent {
@@ -28,6 +29,10 @@ body {
      padding: 16px;
      color: yellow;
      background: black;
+ }
+
+a {
+     color: white;
  }
 
  .buttons {
