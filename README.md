@@ -244,7 +244,7 @@ The port for the server. Use `8765` for now.
 > ```
 > The name field is used to catch button click events (see below). The label field defines the string displayed on the button. 
 > The style field is an `css` code you want to add to the stying of the button. 
-> <span style='background: yellow'>(New in 1.0)</span>
+> &#x1F536; New in 1.0.
 
 > `agents`<br>
 > A list of agents to put in the simulation. For example,
@@ -289,7 +289,7 @@ The brower client relays mouse click, button press, and keyboard events to the e
 
 > Name: `button_click`
 > Value: An object with the a `name` field that matches the name field used in `config.json`. 
-> <span style='background: yellow'>(New in 1.0)</span>
+> &#x1F536; New in 1.0.
 
 > Name: `keydown`
 > Value: An object with a `key` field, which is the character pressed, as well as the following boolean fields
@@ -299,11 +299,11 @@ The brower client relays mouse click, button press, and keyboard events to the e
 > altKey
 > metaKey
 > ```
-> <span style='background: yellow'>(New in 1.0)</span>
+> &#x1F536; New in 1.0.
 
 > Name: `keyup`
 > Value: Same as for `keydown`. 
-> <span style='background: yellow'>(New in 1.0)</span>
+> &#x1F536; New in 1.0.
 
 To respond to events in your code, you should put elma watchers into the `init()` method of some process. For example, to respond to an agent click, you might do
 ```c++
@@ -316,6 +316,8 @@ void init() {
 }
 ```
 
+Debugging Tools
+===
 
-
+The user interface is written in Javascript using React. If you are using Chrome, you can install [this plugin](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en). Then you can open the Chrome developer tools, click the ***Components*** tab, and then click on `Enviro` which will bring up the state on the right panel. Expand `data` to see information about all the agents. 
 
