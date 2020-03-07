@@ -120,10 +120,14 @@ class Taskbar extends React.Component {
   } 
 
   render() {
+    let buttons = this.props.buttons;
+    if ( !buttons ) {
+      buttons = [];
+    }
     return <div id="title-container">
       <span id="title">ENVIRO: {this.props.name}</span>  
       <div className="buttons">
-        {this.props.buttons.map(button => 
+        {buttons.map(button => 
           <button key={button.label}
                   className='action-button'
                   style={button.style}
