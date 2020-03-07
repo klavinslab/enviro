@@ -11,7 +11,7 @@ SRCEXT      := cc
 
 # Directories
 CHIPDIR     := /usr/local/src/Chipmunk2D
-ENVIRODIR   := /source/server/include
+ENVIRODIR   := ../../../server/include
 
 #Flags, Libraries and Includes
 CFLAGS      := -ggdb  -shared -fPIC

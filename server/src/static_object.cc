@@ -14,9 +14,9 @@ json StaticObject::build_specification(json static_entry) {
             "type": "static",
             "description": "A Static Object",
             "friction": {
-                "collision": 10,
-                "linear": 10,
-                "rotational": 100
+                "collision": 1,
+                "linear": 1,
+                "rotational": 1
             },
             "mass": 1
         }    

@@ -56,4 +56,27 @@ inline json ENVIRO_AGENT_SCHEMA = R"(
     }
 )"_json;
 
+inline json ENVIRO_OMNI_AGENT_SCHEMA = R"(
+    {
+        "name": "",
+        "type": "",
+        "description": "",
+        "shape": "",
+        "radius": 0,
+        "friction": {
+            "collision": 0,
+            "linear": 0,
+            "rotational": 0
+        },
+        "sensors": [
+            {
+                "location": { "x": 0, "y": 0 },
+                "direction": 0
+            }
+        ],
+        "mass": 0,    
+        "controller": ""
+    }
+)"_json;
+
 #endif

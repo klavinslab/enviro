@@ -1,0 +1,15 @@
+{
+    "name": "Mover",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": "omni",
+    "radius": 10,
+    "friction": {
+      "collision": 1,
+      "linear": 1,
+      "rotational": 600
+    },
+    "sensors": [],
+    "mass": 1,    
+    "controller": "lib/mover.so"
+}

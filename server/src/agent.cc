@@ -15,42 +15,73 @@ namespace enviro {
 
         cpSpace * space = world.get_space();
 
-        int num_vertices = specification["definition"]["shape"].size();
-        cpVect *vertices = (cpVect *) calloc(num_vertices, sizeof(cpVect));
-        int i = 0;
+        if ( specification["definition"]["shape"].is_array() ) {
 
-        for (auto v : specification["definition"]["shape"]) {
-            vertices[i++] = cpv(v["x"], v["y"]);
-        }
+            int num_vertices = specification["definition"]["shape"].size();
+            cpVect *vertices = (cpVect *) calloc(num_vertices, sizeof(cpVect));
+            int i = 0;
 
-        cpFloat moment = cpMomentForPoly(
-            specification["definition"]["mass"], 
-            num_vertices, 
-            vertices, 
-            cpvzero, 1);
+            for (auto v : specification["definition"]["shape"]) {
+                vertices[i++] = cpv(v["x"], v["y"]);
+            }
 
-        _body = cpSpaceAddBody(
-            space, 
-            cpBodyNew(
+            cpFloat moment = cpMomentForPoly(
                 specification["definition"]["mass"], 
-                moment));
-
-        cpBodySetPosition(_body, cpv(
-            specification["position"]["x"], 
-            specification["position"]["y"]
-        ));
-
-        cpBodySetAngle(_body, specification["position"]["theta"]);
-
-        _shape = cpSpaceAddShape(
-            space, 
-            cpPolyShapeNew(
-                _body, 
                 num_vertices, 
                 vertices, 
-                IDENTITY, 1));
+                cpvzero, 1);
 
-        cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>());
+            _body = cpSpaceAddBody(
+                space, 
+                cpBodyNew(
+                    specification["definition"]["mass"], 
+                    moment));
+
+            cpBodySetPosition(_body, cpv(
+                specification["position"]["x"], 
+                specification["position"]["y"]
+            ));
+
+            cpBodySetAngle(_body, specification["position"]["theta"]);
+
+            _shape = cpSpaceAddShape(
+                space, 
+                cpPolyShapeNew(
+                    _body, 
+                    num_vertices, 
+                    vertices, 
+                    IDENTITY, 1));
+
+            cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>());  
+            cpShapeSetElasticity(_shape, 0.5);                
+
+        } else {
+
+            cpFloat moment = cpMomentForCircle(
+                specification["definition"]["mass"], 
+                specification["definition"]["radius"],
+                specification["definition"]["radius"],
+                cpv(0,0));     
+
+            _body = cpSpaceAddBody(
+                space, 
+                cpBodyNew(
+                    specification["definition"]["mass"], 
+                    moment));    
+
+            cpBodySetPosition(_body, cpv(
+                specification["position"]["x"], 
+                specification["position"]["y"]
+            ));     
+
+            _shape = cpSpaceAddShape(
+                space, 
+                cpCircleShapeNew(_body, specification["definition"]["radius"], cpv(0,0)));  
+
+            cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>()); 
+            cpShapeSetElasticity(_shape, 0.5);                                                                    
+
+        }
 
         if ( specification["definition"]["type"] == "static" ) {
             cpBodySetType(_body, CP_BODY_TYPE_STATIC);
@@ -119,6 +150,29 @@ namespace enviro {
         }
     }
 
+    Agent& Agent::omni_apply_force(cpFloat fx, cpFloat fy) {
+
+        if ( is_static() ) {
+            return *this;
+        }
+
+        cpFloat kL = linear_friction(); 
+        cpFloat kR = rotational_friction(); 
+
+        cpVect f = { 
+            x: fx,
+            y: fy
+        };
+
+        cpVect F = cpvadd(cpvmult(velocity(), -kL), f);
+
+        cpBodySetForce(_body, F );
+        cpBodySetTorque(_body, - kR * angular_velocity() );
+
+        return *this;
+
+    }    
+
     Agent& Agent::apply_force(cpFloat thrust, cpFloat torque) {
 
         if ( is_static() ) {
@@ -155,9 +209,20 @@ namespace enviro {
 
     }
 
+    Agent& Agent::omni_track_velocity(double vx, double vy, double k) {
+        return omni_apply_force(
+            - k * ( velocity().x - vx),
+            - k * ( velocity().y - vy)
+        );        
+    }
+
     Agent& Agent::damp_movement() {
         return track_velocity(0,0);
     }
+
+    Agent& Agent::omni_damp_movement() {
+        return omni_apply_force(0,0);
+    }    
 
     double normalize_angle(double angle) {
         // Returns a in the range -pi, pi
@@ -186,6 +251,21 @@ namespace enviro {
 
         return *this;
     }
+
+    Agent& Agent::omni_move_toward(cpFloat x, cpFloat y, double v) {
+
+        cpVect p = position();
+        double d = cpvdist(p,cpv(x,y));
+
+        cpVect V = cpvmult(
+            cpvsub(cpv(x,y),p),
+            v * d / ( 5 + d )
+        );
+
+        omni_track_velocity(V.x, V.y);
+
+        return *this;
+    }    
 
     Agent& Agent::teleport(cpFloat x, cpFloat y, cpFloat theta) {
         cpBodySetPosition(_body, {x: x, y: y});
@@ -248,12 +328,30 @@ namespace enviro {
     json Agent::build_specification(json agent_entry) {
 
         json result = agent_entry, definition;
-        definition = json_helper::read(result["definition"]);
-        json_helper::check(definition, ENVIRO_AGENT_SCHEMA);
+        try {
+            definition = json_helper::read(result["definition"]);
+        } catch ( const nlohmann::detail::parse_error &e ) {
+            std::string msg = "Could not parse ";
+            msg += result["definition"];
+            msg += ": ";
+            msg += e.what();
+            throw std::runtime_error(msg);
+        }
+
+        if ( !definition["shape"].is_null() && definition["shape"].is_array() ) {
+            json_helper::check(definition, ENVIRO_AGENT_SCHEMA);
+        } else if ( !definition["shape"].is_null() && definition["shape"].is_string() && definition["shape"] == "omni" ) {
+            json_helper::check(definition, ENVIRO_OMNI_AGENT_SCHEMA);
+        } else {
+            std::string msg = "Could not find a valid shape definition in agent definition in ";
+            msg += result["definition"];
+            throw std::runtime_error(msg);
+        }
 
         result["definition"] = definition;
         return result;
-    }  
+
+    }
 
     Agent * Agent::create_from_specification(json spec, World& world) {
 

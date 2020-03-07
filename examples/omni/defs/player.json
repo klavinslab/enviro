@@ -1,0 +1,21 @@
+{
+    "name": "Player",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": "omni",
+    "radius": 20,
+    "friction": {
+      "collision": 1,
+      "linear": 1,
+      "rotational": 1000
+    },
+    "sensors": [
+      {
+        "type": "range",
+        "location": { "x": 20, "y": 0 },
+        "direction": 0
+      }
+    ],
+    "mass": 1,    
+    "controller": "lib/player.so"
+}

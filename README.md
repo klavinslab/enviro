@@ -60,6 +60,8 @@ src/
   my_robot.cc           // Contains the implementation of the classes in my_robot.h
 ```
 
+Note that `esm generate` only makes directional robots. For an omni-directional robot, you need to subsequently edit the `defs/my_robot.json` file and change "shape" to "omni" and add a "radius" field (see below). &#x1F537; New in 1.1.
+
 To compile the robot code, do
 ```
 make
@@ -90,6 +92,11 @@ enviro
 ```
 and see a green square in the environment. That's your robot!
 
+More Examples
+===
+
+See the [examples directory](https://github.com/klavinslab/enviro/tree/master/examples) for more examples of agent definitions and controllers. 
+
 Defining Agents
 ===
 
@@ -118,7 +125,11 @@ Either "dynamic" or "static". If "dynamic", then the agent will move, have mass,
 A string describing the agent.
 
 > `shape`<br>
-A list of pairs of the form `{ "x": 10, "y": 12 }` defining the vertices of a polygon. The physics engine will use this to determine the moment of initial and collision shape of the robot, and the user interface will use it to render the agent. All points are relative to the robot's center. 
+> ***polygon shaped:*** A list of pairs of the form `{ "x": 10, "y": 12 }` defining the vertices of a polygon. The physics engine will use this to determine the moment of initial and collision shape of the robot, and the user interface will use it to render the agent. All points are relative to the robot's center.<br>
+> ***circular:*** The string "omni", which makes a circular omni-directional agent. If you choose this option, you also need to specify a "radius". &#x1F537; New in 1.1. 
+
+> `radius`<br>
+The radius of a circular, omnidirectional robot. Only used when the `shape` field is "omni". &#x1F537; New in 1.1. 
 
 > `friction`<br>
 An object with three numerical fields, `collision`, `linear`, and `rotational` defining the fricition coefficients of the robot with other robots and with the environment. Note that the latter two coefficients are only used if you apply a control in your `update()` methods such as `damp_movement()` or `track_velocity()`. 
@@ -189,10 +200,13 @@ This method returns the position of the agent. The `cpVect` structure has fields
 > `cpVect velocity()`<br>
 This method returns the velocity of the agent. The `cpVect` structure has fields `x` and `y` that can be treated as `doubles`. 
 
-> `cpFloat angle()`<br>
+> `x()`, `y()`, `vx()`, `vy()`<br>
+The horizontal and verical positions, and the horizonal and vertical velocities -- separated out so you do not need to about the structure. &#x1F537; New in 1.1. 
+
+> `double angle()`<br>
 This method returns the angle of the agent in radians and can be treated as a `double`.
 
-> `cpFloat angular_velocity()`<br>
+> `double angular_velocity()`<br>
 This method returns the angular velocity of the agent in radians per second and can be treated as a `double`.
 
 > `int id()`<br>
@@ -208,7 +222,7 @@ This method makes the agent attempty to track the given linear and angular veloc
 This method slows the agent down using the linear and angular friction coefficients defined in the agent's JSON definition file.  
 
 > `void move_toward(double x, double y, double vF=75, double vR=20)`<br>
-This method attepts to move the agent to the given (x,y) location. If something in the way, the agent will not get there. The robot simultaneously attempts to rotate so that it is pointing toward the target and also moves forward, going faster as its angular error is reduced. The optional arguments are the desired velocities of rotation and forward motion. 
+This method attepts to move the agent to the given (x,y) location. If something in the way, the agent will not get there. The robot simultaneously attempts to rotate so that it is pointing toward the target and also moves forward, going faster as its angular error is reduced. The optional arguments are the gains on the rotational and forward motion. 
 
 > `void teleport(double x, double y, double theta)`<br>
 This method instantaneously moves the agent to the given position and orientation.
@@ -218,6 +232,21 @@ This method returns the value of the specificed index. It is the distance from t
 
 > `std::vector<double> sensor_values()`<br>
 This method returns a list of all the sensor values, in the same order as the sensors appear in the agent's JSON definition.
+
+For Omni Directional Robots
+---
+
+> `void omni_apply_force(double fx, double fy)`<br>
+This methied applies a force specified by the arguments. The agent's mass comes in to play here using Newton's laws of motion. &#x1F537; New in 1.1.
+
+> `void omni_track_velocity(double vx, double vy, double k=10)` <br>
+This method makes the agent attempty to track the given translational velocity. If other elements are in the way, or if it is experience collisions, it may not be able to exactly track these values. The optional argument is the proportional gain on the feedback controller that implements the tracking controller. &#x1F537; New in 1.1.
+
+> `void omni_damp_movement()`<br>
+This method slows the agent down using the linear and angular friction coefficients defined in the agent's JSON definition file. &#x1F537; New in 1.1.
+
+> `void omni_move_toward(double x, double y, double v=1)`<br>
+This method attepts to move the agent to the given (x,y) location. If something in the way, the agent will not get there. The robot simultaneously attempts to rotate so that it is pointing toward the target and also moves forward, going faster as its angular error is reduced. The optional argument is the desired velocity of rotation and forward motion. &#x1F537; New in 1.1.
 
 Project Configuration
 ===

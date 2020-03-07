@@ -52,15 +52,25 @@ namespace enviro {
 
         // State getters
         inline cpVect position() const { return cpBodyGetPosition(_body); }
+        inline double x() const { return cpBodyGetPosition(_body).x; }
+        inline double y() const { return cpBodyGetPosition(_body).y; }
+
         inline cpVect velocity() const { return cpBodyGetVelocity(_body); }
-        inline cpFloat angle() const { return cpBodyGetAngle(_body); }
-        inline cpFloat angular_velocity() const { return cpBodyGetAngularVelocity(_body); }
+        inline double vx() const { return cpBodyGetVelocity(_body).x; }
+        inline double vy() const { return cpBodyGetVelocity(_body).y; }
+
+        inline double angle() const { return cpBodyGetAngle(_body); }
+        inline double angular_velocity() const { return cpBodyGetAngularVelocity(_body); }
 
         // Actuators
+        Agent& omni_apply_force(cpFloat fx, cpFloat fy);
         Agent& apply_force(cpFloat thrust, cpFloat torque);
         Agent& track_velocity(cpFloat linear_velocity, cpFloat angular_velocity, cpFloat kL=10, cpFloat kR=10);
+        Agent& omni_track_velocity(double vx, double vy, double k=10);  
         Agent& damp_movement();
+        Agent& omni_damp_movement();
         Agent& move_toward(cpFloat x, cpFloat y, double vF=75, double vR=20);
+        Agent& omni_move_toward(double x, double y, double v=1);
         Agent& teleport(cpFloat x, cpFloat y, cpFloat theta);
 
         // Parameter getters
