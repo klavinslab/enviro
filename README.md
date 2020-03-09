@@ -188,7 +188,7 @@ class MyRobot : public Agent {
 Here, `MyProcess1` and `MyProcess2` should be classes that you define that (multiple) inherit from `elma::Process` and `enviro::AgentInterface`. The class `MyStateMachine` should inherit from `elma::StateMachine` and `enviro::AgentInterface`.
 
 The AgentInterface Class
----
+===
 
 Processes and state machines that are added to agents are both elma processes and agent interfaces. To learn how to use elma processes, go [here](http://klavinslab.org/elma). 
 
