@@ -60,7 +60,7 @@ src/
   my_robot.cc           // Contains the implementation of the classes in my_robot.h
 ```
 
-Note that `esm generate` only makes directional robots. For an omni-directional robot, you need to subsequently edit the `defs/my_robot.json` file and change "shape" to "omni" and add a "radius" field (see below). &#x1F537; New in 1.1.
+Note that `esm generate` only makes directional robots. For an omni-directional robot, you need to subsequently edit the `defs/my_robot.json` file and change "shape" to "omni" and add a "radius" field (see below). &#x246A; New in 1.1.
 
 To compile the robot code, do
 ```
@@ -126,10 +126,10 @@ A string describing the agent.
 
 > `shape`<br>
 > ***polygon shaped:*** A list of pairs of the form `{ "x": 10, "y": 12 }` defining the vertices of a polygon. The physics engine will use this to determine the moment of initial and collision shape of the robot, and the user interface will use it to render the agent. All points are relative to the robot's center.<br>
-> ***circular:*** The string "omni", which makes a circular omni-directional agent. If you choose this option, you also need to specify a "radius". &#x1F537; New in 1.1. 
+> ***circular:*** The string "omni", which makes a circular omni-directional agent. If you choose this option, you also need to specify a "radius". &#x246A; New in 1.1. 
 
 > `radius`<br>
-The radius of a circular, omnidirectional robot. Only used when the `shape` field is "omni". &#x1F537; New in 1.1. 
+The radius of a circular, omnidirectional robot. Only used when the `shape` field is "omni". &#x246A; New in 1.1. 
 
 > `friction`<br>
 An object with three numerical fields, `collision`, `linear`, and `rotational` defining the fricition coefficients of the robot with other robots and with the environment. Note that the latter two coefficients are only used if you apply a control in your `update()` methods such as `damp_movement()` or `track_velocity()`. 
@@ -194,6 +194,9 @@ Processes and state machines that are added to agents are both elma processes an
 
 The agent interface class methods are described below. They are available in the `init()`, `start()`, `update()`, and `stop()` methods of your process, as well as the `entry()`, `during()` and `exit()` methods of any states in your state machines.
 
+Agent State
+---
+
 > `cpVect position()` <br>
 This method returns the position of the agent. The `cpVect` structure has fields `x` and `y` that can be treated as `doubles`. 
 
@@ -201,7 +204,7 @@ This method returns the position of the agent. The `cpVect` structure has fields
 This method returns the velocity of the agent. The `cpVect` structure has fields `x` and `y` that can be treated as `doubles`. 
 
 > `x()`, `y()`, `vx()`, `vy()`<br>
-The horizontal and verical positions, and the horizonal and vertical velocities -- separated out so you do not need to about the structure. &#x1F537; New in 1.1. 
+The horizontal and verical positions, and the horizonal and vertical velocities -- separated out so you do not need to about the structure. &#x246A; New in 1.1. 
 
 > `double angle()`<br>
 This method returns the angle of the agent in radians and can be treated as a `double`.
@@ -211,6 +214,9 @@ This method returns the angular velocity of the agent in radians per second and 
 
 > `int id()`<br>
 This method returns a unique id of the agent.
+
+Motion Control for Oriented Agents
+---
 
 > `void apply_force(double thrust, double torque)`<br>
 This methied applies a force specified by the `thrust` argument in the direction the agent is currently facing, and applies a torque specified by the `torque` argument around the center of the agent. The agent's mass comes in to play here using Newton's laws of motion. 
@@ -233,20 +239,93 @@ This method returns the value of the specificed index. It is the distance from t
 > `std::vector<double> sensor_values()`<br>
 This method returns a list of all the sensor values, in the same order as the sensors appear in the agent's JSON definition.
 
-For Omni Directional Robots
+Motion Control For Omni Directional Agents
 ---
 
 > `void omni_apply_force(double fx, double fy)`<br>
-This methied applies a force specified by the arguments. The agent's mass comes in to play here using Newton's laws of motion. &#x1F537; New in 1.1.
+This methied applies a force specified by the arguments. The agent's mass comes in to play here using Newton's laws of motion. &#x246A; New in 1.1.
 
 > `void omni_track_velocity(double vx, double vy, double k=10)` <br>
-This method makes the agent attempty to track the given translational velocity. If other elements are in the way, or if it is experience collisions, it may not be able to exactly track these values. The optional argument is the proportional gain on the feedback controller that implements the tracking controller. &#x1F537; New in 1.1.
+This method makes the agent attempty to track the given translational velocity. If other elements are in the way, or if it is experience collisions, it may not be able to exactly track these values. The optional argument is the proportional gain on the feedback controller that implements the tracking controller. &#x246A; New in 1.1.
 
 > `void omni_damp_movement()`<br>
-This method slows the agent down using the linear and angular friction coefficients defined in the agent's JSON definition file. &#x1F537; New in 1.1.
+This method slows the agent down using the linear and angular friction coefficients defined in the agent's JSON definition file. &#x246A; New in 1.1.
 
 > `void omni_move_toward(double x, double y, double v=1)`<br>
-This method attepts to move the agent to the given (x,y) location. If something in the way, the agent will not get there. The robot simultaneously attempts to rotate so that it is pointing toward the target and also moves forward, going faster as its angular error is reduced. The optional argument is the desired velocity of rotation and forward motion. &#x1F537; New in 1.1.
+This method attepts to move the agent to the given (x,y) location. If something in the way, the agent will not get there. The robot simultaneously attempts to rotate so that it is pointing toward the target and also moves forward, going faster as its angular error is reduced. The optional argument is the desired velocity of rotation and forward motion. &#x246A; New in 1.1.
+
+Collisions
+---
+
+> `void notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler)` <br>
+> Runs the handler function upon collisions with agents of the given agent type. 
+> The `agent_type` string is the name used in `defs/*.json` files. 
+> These should usually be set up in the `init` function of a process, as follows:
+> ```c++
+> void init() {
+>     notice_collisions_with("Robot", [&](Event &e) {
+>         int other_robot_id = e.value()["id"];
+>         Agent& other_robot = find_agent(other_robot_id); 
+>         // etc.
+>     });
+> }
+> ```
+> &#x246B; New in 1.2.
+
+> `void ignore_collisions_with(const std::string agent_type)` <br>
+> Stop noticing collisions with agents of the given type. 
+> &#x246B; New in 1.2.
+
+Constraints
+---
+
+> `void attach_to(Agent &other_agent)` <br>
+> Create a constraint that attaches the calling agent to the `other_agent`. 
+> For example, after the call
+> ```c++
+> Agent& other_robot = find_agent(other_robot_id); 
+> attach_to(other_robot);
+> ```
+> the two agents center's will be constrained to remain at the same distance from each other. 
+> &#x246B; New in 1.2.
+
+Agent Management
+---
+
+> `Agent& find_agent(int id)` <br>
+> Given an agent's id, returns a reference to the agent. Note: ***do not*** assign the return value of this function to a normal 
+> variable, because when it goes out of scope, the agent's destructor will be called. Instead, assign it to a reference, as in
+> ```c++
+> Agent& other_agent = find_agent(other_agent_id;
+> ```
+> &#x246B; New in 1.2.
+
+> `bool agent_exists(int id)` <br>
+> Returns true or false depending on whether an agent with the given id still exists (i.e. is being managed by enviro). 
+> Agents may cease to exist if `remove_agent()` is called. 
+> &#x246B; New in 1.2.
+
+> `void remove_agent(int id)` <br>
+> Removes the agent with the given id from the simulation. Also calls it's desctructor, so think of it as remove and delete. 
+> &#x246B; New in 1.2.
+
+> `Agent& add_agent(const std::string name, double x, double y, double theta, const json style)` <br>
+> Add's a new agent to the simulation with the given name at the given position and orientation.
+> Note that an agent with this type should have been mentioned in `config.json` so enviro knows about it. 
+> The style argument determines the agent's style, just as in the configuration file. 
+> Any valid svg styling will work. For example:
+> ```c++
+> Agent& v = add_agent("Block", 0, 0, 0, {{"fill": "bllue"},{"stroke": "black"}});
+> ```
+> &#x246B; New in 1.2.
+
+Styling
+---
+
+> `void set_style(json style)` <br>
+> Change the agent's style, just as in the configuration file. 
+> Any valid svg styling will work.
+> &#x246B; New in 1.2.
 
 Project Configuration
 ===
@@ -273,7 +352,7 @@ The port for the server. Use `8765` for now.
 > ```
 > The name field is used to catch button click events (see below). The label field defines the string displayed on the button. 
 > The style field is an `css` code you want to add to the stying of the button. 
-> &#x1F536; New in 1.0.
+> &#x2469; New in 1.0.
 
 > `agents`<br>
 > A list of agents to put in the simulation. For example,
@@ -310,17 +389,17 @@ Responding to Front End Events
 
 The brower client relays mouse click, button press, and keyboard events to the enviro server, which your process can watch for. The event types and associated information are:
 
-> Name: `screen_click`
+> Name: `screen_click`<br>
 > Value: An object with `x` and `y` fields holding the location of the click in world coordinates.
 
-> Name: `agent_click`
+> Name: `agent_click`<br>
 > Value: An object with `id`, `x` and `y` fields holding the agent's id and the location of the click in **agent** coordinates. 
 
-> Name: `button_click`
+> Name: `button_click`<br>
 > Value: An object with the a `name` field that matches the name field used in `config.json`. 
-> &#x1F536; New in 1.0.
+> &#x2469; New in 1.0.
 
-> Name: `keydown`
+> Name: `keydown`<br>
 > Value: An object with a `key` field, which is the character pressed, as well as the following boolean fields
 > ```
 > ctrlKey
@@ -328,11 +407,11 @@ The brower client relays mouse click, button press, and keyboard events to the e
 > altKey
 > metaKey
 > ```
-> &#x1F536; New in 1.0.
+> &#x2469; New in 1.0.
 
-> Name: `keyup`
+> Name: `keyup`<br>
 > Value: Same as for `keydown`. 
-> &#x1F536; New in 1.0.
+> &#x2469; New in 1.0.
 
 To respond to events in your code, you should put elma watchers into the `init()` method of some process. For example, to respond to an agent click, you might do
 ```c++
