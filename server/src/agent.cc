@@ -9,11 +9,23 @@ namespace enviro {
     static int _next_id = 0;
 
     Agent::Agent(json specification, World& world) : 
-        _specification(specification), 
+        _specification(specification),
         _world_ptr(&world), 
+        _alive(true),
         Process(specification["definition"]["name"].get<string>()) {
 
         cpSpace * space = world.get_space();
+        if ( !space ) {
+            throw std::runtime_error("Uninitialized physics space in agent constructor");
+        }
+
+        if ( cpSpaceIsLocked(space) ) {
+            throw std::runtime_error("Cannot add shapes and bodies to space when it is updating");
+        }
+
+        _id = _next_id++;
+
+        std::cout << specification << "\n";
 
         if ( specification["definition"]["shape"].is_array() ) {
 
@@ -37,6 +49,8 @@ namespace enviro {
                     specification["definition"]["mass"], 
                     moment));
 
+            // std::cout << "pos func " << (long int) _body->position_func << "\n";
+
             cpBodySetPosition(_body, cpv(
                 specification["position"]["x"], 
                 specification["position"]["y"]
@@ -51,9 +65,8 @@ namespace enviro {
                     num_vertices, 
                     vertices, 
                     IDENTITY, 1));
-
-            cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>());  
-            cpShapeSetElasticity(_shape, 0.5);                
+            
+            std::cout << "Added new physics stuff for agent " << _id << "\n";
 
         } else {
 
@@ -78,17 +91,19 @@ namespace enviro {
                 space, 
                 cpCircleShapeNew(_body, specification["definition"]["radius"], cpv(0,0)));  
 
-            cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>()); 
-            cpShapeSetElasticity(_shape, 0.5);                                                                    
-
+            std::cout << "Added new physics stuff for agent " << _id << "\n";                
+                                                                          
         }
+
+        cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>()); 
+        cpShapeSetElasticity(_shape, 0.5);        
 
         if ( specification["definition"]["type"] == "static" ) {
             cpBodySetType(_body, CP_BODY_TYPE_STATIC);
         }
 
-        // TODO: DELETE VERTICES? Or make them instance vars and delete with destructor?
-        _id = _next_id++;
+        cpShapeSetCollisionType(_shape, AGENT_COLLISION_TYPE);
+        cpBodySetUserData(_body, this);
 
         setup_sensors();
 
@@ -297,6 +312,7 @@ namespace enviro {
     }    
 
     Agent::~Agent() {
+        std::cout << "Deleting agent " << get_id() << "\n";
         cpShapeFree(_shape);
         cpBodyFree(_body);
     }
@@ -321,6 +337,58 @@ namespace enviro {
             {"specification", _specification},
             {"sensors", sensor_values() }
         };            
+    }
+
+    // Collisions
+    Agent& Agent::notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler) {
+        collision_handlers[agent_type] = handler;
+        return *this;
+    }
+
+    Agent& Agent::ignore_collisions_with(const std::string agent_type) {
+        collision_handlers.erase(agent_type);
+        return *this;
+    }  
+
+    Agent& Agent::handle_collision(const Agent &other) {
+        std::string other_type = other.definition()["name"];
+        auto i = collision_handlers.find(other_type);
+        if ( i != collision_handlers.end() ) {
+            auto handler = collision_handlers[other_type];
+            Event e("collision", {
+                { "type", other_type },
+                { "x", other.x() },
+                { "y", other.y() },
+                {"id", other.get_id() }
+            });
+            handler(e);
+        }
+        return *this;
+    }
+
+    // Constraints
+    Agent& Agent::find_agent(int id) {
+        return _world_ptr->find_agent(id);
+    }
+
+    Agent& Agent::attach_to(Agent &agent) {
+        _world_ptr->add_constraint(*this, agent);
+        return *this;
+    } 
+
+    // Styles
+    Agent& Agent::set_style(json style) {
+        _specification["style"] = style;
+        return *this;
+    }
+
+    // Agent Management
+    void Agent::remove_agent(int id) { _world_ptr->remove(id); }
+
+    bool Agent::agent_exists(int id) { return _world_ptr->exists(id); }
+
+    Agent& Agent::add_agent(const std::string name, double x, double y, double theta, const json style) { 
+        return _world_ptr->add_agent(name,x,y,theta,style); 
     }
 
     // Class wide methods /////////////////////////////////////////
@@ -350,21 +418,6 @@ namespace enviro {
 
         result["definition"] = definition;
         return result;
-
-    }
-
-    Agent * Agent::create_from_specification(json spec, World& world) {
-
-        auto file = spec["definition"]["controller"].get<std::string>();
-        auto handle = dlopen(file.c_str() , RTLD_LAZY);
-        if (!handle) {
-            std::cerr << "Error: " << file << "\n";
-            throw std::runtime_error(dlerror());
-        }
-        auto create_agent = AGENT_CREATE_TYPE dlsym(handle, "create_agent");
-        auto agent_ptr = (Agent*) create_agent(spec, world); 
-        agent_ptr->set_destroyer(AGENT_DESTROY_TYPE dlsym(handle, "destroy_agent"));
-        return agent_ptr;
 
     }
 

@@ -1,0 +1,15 @@
+{
+    "name": "Cell",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": "omni",
+    "radius": 100,
+    "friction": {
+      "collision": 5,
+      "linear": 40,
+      "rotational": 600
+    },
+    "sensors": [],
+    "mass": 5,    
+    "controller": "lib/cell.so"
+}

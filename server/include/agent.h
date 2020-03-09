@@ -13,6 +13,8 @@
 #define AGENT_CREATE_TYPE (Agent* (*)(json spec, World&))
 #define AGENT_DESTROY_TYPE (void (*)(Agent*))
 
+#define AGENT_COLLISION_TYPE 1
+
 #define DECLARE_INTERFACE(__CLASS_NAME__)                                         \
 extern "C" __CLASS_NAME__* create_agent(json spec, enviro::World& world) {        \
     return new __CLASS_NAME__(spec, world);                                       \
@@ -84,10 +86,29 @@ namespace enviro {
         double sensor_value(int index);
         std::vector<double> sensor_values();
 
+        // Collisons
+        Agent& notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler);
+        Agent& ignore_collisions_with(const std::string agent_type);   
+        Agent& handle_collision(const Agent &other);     
+
+        // Constraints
+        Agent& attach_to(Agent &agent);        
+
         // Other getters
         inline World * get_world_ptr() { return _world_ptr; }
         inline cpShape * get_shape() { return _shape; } 
-        inline int get_id() { return _id; }  
+        inline int get_id() const { return _id; }  
+
+        // Styles
+        Agent& set_style(json style); 
+
+        // Agent Management
+        Agent& find_agent(int id);
+        void remove_agent(int id);
+        bool agent_exists(int id);
+        inline void mark_for_removal() { _alive = false; }
+        inline bool is_alive() { return _alive; }
+        Agent& add_agent(const std::string name, double x, double y, double theta, const json style);
 
         private:
         cpBody * _body;
@@ -99,16 +120,10 @@ namespace enviro {
         std::vector<Sensor *> _sensors;
         World * _world_ptr;
         void setup_sensors();
-
-        // Static methods
+        map<string, std::function<void(Event&)>> collision_handlers;
+        bool _alive;
 
         public:
-        
-        //! This method creates a new agent using the json specification and the
-        //! DLL it points to. This can't be a constructor because it actually
-        //! builds a class that derives from Agent, but is not the Agent class
-        //! itself.
-        static Agent * create_from_specification(json specification, World& world);
 
         //! This method takes an agent entry in the config.json file
         //! and replaces its "definition" field with the definition json

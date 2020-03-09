@@ -1,5 +1,5 @@
 //
-// export BABEL_ENV="development"
+// export BABEL_ENV=production
 // npx babel --watch src/enviro.js --out-file enviro.js 
 // 
 

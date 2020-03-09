@@ -112,3 +112,48 @@ std::vector<double> AgentInterface::sensor_values() {
     ASSERT_AGENT_EXISTS("sensor_values");
     return agent->sensor_values();
 }      
+
+// Collisions
+
+void AgentInterface::notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler) {
+    ASSERT_AGENT_EXISTS("notice_collisions_with");
+    agent->notice_collisions_with(agent_type, handler);  
+}
+
+void AgentInterface::ignore_collisions_with(const std::string agent_type) {
+    ASSERT_AGENT_EXISTS("ignore_collisions_with");
+    agent->ignore_collisions_with(agent_type);  
+}
+
+// Constraints
+Agent& AgentInterface::find_agent(int id) {
+    ASSERT_AGENT_EXISTS("find_agent");
+    return agent->find_agent(id);
+}
+
+void AgentInterface::attach_to(Agent &other_agent) {
+    ASSERT_AGENT_EXISTS("attach_to");
+    agent->attach_to(other_agent);  
+}
+
+// Agent Management
+void AgentInterface::remove_agent(int id) {
+    ASSERT_AGENT_EXISTS("remove_agent");
+    agent->remove_agent(id);    
+}
+
+bool AgentInterface::agent_exists(int id) {
+    ASSERT_AGENT_EXISTS("agent_exists");
+    return agent->agent_exists(id);      
+}
+
+Agent& AgentInterface::add_agent(const std::string name, double x, double y, double theta, const json style) {
+    ASSERT_AGENT_EXISTS("add_agent");
+    return agent->add_agent(name, x, y, theta, style); 
+}
+
+// Style
+void AgentInterface::set_style(json style) {
+    ASSERT_AGENT_EXISTS("set_style");
+    agent->set_style(style);    
+}

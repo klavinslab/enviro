@@ -24,7 +24,6 @@ namespace enviro {
         int id();
 
         // Actuators
-        
         void apply_force(double thrust, double torque);
         void track_velocity(double linear_velocity, double angular_velocity, 
                             double kL=10, double kR=10);
@@ -40,6 +39,22 @@ namespace enviro {
         // Sensors
         double sensor_value(int index);
         std::vector<double> sensor_values();
+
+        // Collisons
+        void notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler);
+        void ignore_collisions_with(const std::string agent_type);
+
+        // Constraints
+        void attach_to(Agent &other_agent);
+
+        // Agent management
+        Agent& find_agent(int id);
+        bool agent_exists(int id);
+        void remove_agent(int id);
+        Agent& add_agent(const std::string name, double x, double y, double theta, const json style);
+
+        // Styles
+        void set_style(json style);
 
         virtual ~AgentInterface() {} // needed to make dynamic_cast work
 

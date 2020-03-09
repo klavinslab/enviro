@@ -23,7 +23,7 @@ int main() {
     json_helper::check(config, ENVIRO_CONFIG_SCHEMA);
 
     Manager m;
-    World world(config);
+    World world(config, m);
     StateMachine sm; // This is here just so the enviro executable includes
                      // state machines from libelma.a. Weird.
     DummyState state;
