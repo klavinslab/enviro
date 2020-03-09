@@ -24,7 +24,7 @@
     "friction": {
       "collision": 5,
       "linear": 40,
-      "rotational": 600
+      "rotational": 1000
     },
     "sensors": [],
     "mass": 1,    
