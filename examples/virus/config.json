@@ -4,124 +4,80 @@
     "ip": "0.0.0.0",
     "port": 8765,
 
-    "agents": [
-        {
-            "definition": "defs/bullet.json",
-            "style": { "fill": "green", "stroke": "#888", "stroke-width": "5px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": -400, 
-                "y": -200, 
-                "theta": 3.14
-            }
-        },         
+    "agents": [      
+        
         {
             "definition": "defs/player.json",
             "style": { "fill": "#555", "stroke": "#888", "stroke-width": "5px", "stroke-opacity": "0.25"},
-            "position": {
-                "x": 400, 
-                "y": 200, 
-                "theta": 2
-            }
-        },         
+            "position": { "x": 400, "y": 200, "theta": 2 }
+        },
+        {
+            "definition": "defs/bullet.json",
+            "style": { "fill": "green", "stroke": "#888", "stroke-width": "5px", "stroke-opacity": "0.25" },
+            "position": {"x": -400, "y": -200, "theta": 3.14 }
+        },
+
+
         {
             "definition": "defs/virus.json",
             "style": { "fill": "orange", "stroke": "black", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": 100, 
-                "y": 100, 
-                "theta": 0
-            }
+            "position": { "x": 100, "y": 100, "theta": 0 }
         },
         {
             "definition": "defs/virus.json",
             "style": { "fill": "orange", "stroke": "black", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": 100, 
-                "y": -100, 
-                "theta": 0
-            }
+            "position": { "x": 100, "y": -100, "theta": 0 }
         },
         {
             "definition": "defs/virus.json",
             "style": { "fill": "orange", "stroke": "black", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": -100, 
-                "y": 100, 
-                "theta": 0
-            }
+            "position": { "x": -100, "y": 100, "theta": 0 }
         },
         {
             "definition": "defs/virus.json",
             "style": { "fill": "orange", "stroke": "black", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": -100, 
-                "y": -100, 
-                "theta": 0
-            }
+            "position": { "x": -100, "y": -100, "theta": 0 }
+        },    
+        
+        
+
+        {
+            "definition": "defs/cell.json",
+            "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
         },        
         {
             "definition": "defs/cell.json",
             "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": 0, 
-                "y": 0, 
-                "theta": 0
-            }
+            "position": { "x": 300, "y": 0, "theta": 0 }
         },        
         {
             "definition": "defs/cell.json",
             "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": 300, 
-                "y": 0, 
-                "theta": 0
-            }
+            "position": { "x": -300, "y": 0, "theta": 0 }
         },        
         {
             "definition": "defs/cell.json",
             "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": -300, 
-                "y": 0, 
-                "theta": 0
-            }
-        },        
-        {
-            "definition": "defs/cell.json",
-            "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": -150, 
-                "y": 200, 
-                "theta": 0
-            }
+            "position": { "x": -150, "y": 200, "theta": 0 }
         },              
         {
             "definition": "defs/cell.json",
             "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": 150, 
-                "y": 200, 
-                "theta": 0
-            }
+            "position": { "x": 150, "y": 200, "theta": 0 }
         },        
         {
             "definition": "defs/cell.json",
             "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": -150, 
-                "y": -200, 
-                "theta": 0
-            }
+            "position": { "x": -150, "y": -200, "theta": 0 }
         },              
         {
             "definition": "defs/cell.json",
             "style": { "fill": "lightblue", "stroke": "#aaa", "stroke-width": "10px", "stroke-opacity": "0.25" },
-            "position": {
-                "x": 150, 
-                "y": -200, 
-                "theta": 0
-            }
-        }                   
+            "position": { "x": 150, "y": -200, "theta": 0 }
+        }  
+        
+        
     ],
 
     "statics": []

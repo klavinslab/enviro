@@ -84,7 +84,9 @@ namespace enviro {
 
         // Sensor methods
         double sensor_value(int index);
+        std::string sensor_reflection_type(int index);
         std::vector<double> sensor_values();
+        std::vector<std::string> sensor_reflection_types();
 
         // Collisons
         Agent& notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler);
@@ -101,6 +103,18 @@ namespace enviro {
 
         // Styles
         Agent& set_style(json style); 
+        Agent& decorate(const std::string svg) { _decoration = svg; return *this; }
+        Agent& label(const string str, double x, double y ) { 
+            _label = str;
+            _label_x = x;
+            _label_y = y;
+            return *this;
+        }
+        Agent& clear_label() {
+            _label = "";
+            return *this;
+        }
+
 
         // Agent Management
         Agent& find_agent(int id);
@@ -122,6 +136,11 @@ namespace enviro {
         void setup_sensors();
         map<string, std::function<void(Event&)>> collision_handlers;
         bool _alive;
+
+        // Decorations
+        std::string _decoration;
+        std::string _label;
+        double _label_x, _label_y;
 
         public:
 

@@ -68,23 +68,29 @@ class Agent extends React.Component {
     let agent = this.props.agent;
     if ( agent.specification.definition.shape == "omni" ) {
       let rot = `rotate(${180*agent.position.theta/Math.PI})`;
+      let unrot = `rotate(${-180*agent.position.theta/Math.PI})`;
       let tra = `translate(${agent.position.x} ${agent.position.y})`;
       return <g key={agent.id} transform={tra + rot} ref={el => this.findSize(el)}>
-          <circle cx={0} cy={0} r={agent.specification.definition.radius} 
+          <circle cx={0} cy={0} r={agent.specification.definition.radius}
                   className="agent" 
                   style={agent.specification.style} 
                   onClick={e=> this.click(e) }/>
           <line x1={0} y1={0} x2={agent.specification.definition.radius} y2={0} className="rotation-indicator"></line>
           {agent.sensors.map((value,i) => <Sensor value={value} agent={agent} i={i} key={i} />)}
+          <g dangerouslySetInnerHTML={{__html: agent.decoration}} />
+          <text x={agent.label.x} y={agent.label.y} transform={unrot}>{agent.label.text}</text>
       </g>
-    } else {
+    } else { 
       let p = agent.specification.definition.shape.map(p => `${p.x},${p.y}`).join(" ");
       let rot = `rotate(${180*agent.position.theta/Math.PI})`;
+      let unrot = `rotate(${-180*agent.position.theta/Math.PI})`;
       let tra = `translate(${agent.position.x} ${agent.position.y})`;
       return <g key={agent.id} transform={tra + rot} ref={el => this.findSize(el)}>
           <polygon points={p} className="agent" style={agent.specification.style} onClick={e=> this.click(e) }/>
           {agent.sensors.map((value,i) => <Sensor value={value} agent={agent} i={i} key={i} />)}
-      </g>  
+          <g dangerouslySetInnerHTML={{__html: agent.decoration}} />
+          <text x={agent.label.x} y={agent.label.y} transform={unrot}>{agent.label.text}</text>
+      </g>   
     }
   }
 

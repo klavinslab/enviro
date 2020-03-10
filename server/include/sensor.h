@@ -17,7 +17,7 @@ namespace enviro {
               : _agent_ptr(&agent), _location({x: x, y: y}), _angle(angle) {
         }
 
-        virtual double value() = 0;
+        virtual std::pair<double,std::string> value() = 0;
 
         protected:
         Agent * _agent_ptr; 
@@ -30,7 +30,7 @@ namespace enviro {
 
         public:
         RangeSensor(Agent &agent, double x, double y, double angle) : Sensor(agent,x,y,angle) {}
-        double value();
+        std::pair<double,std::string> value();
 
     };
 

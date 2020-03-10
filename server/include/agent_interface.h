@@ -39,6 +39,8 @@ namespace enviro {
         // Sensors
         double sensor_value(int index);
         std::vector<double> sensor_values();
+        std::string sensor_reflection_type(int index);
+        std::vector<std::string> sensor_reflection_types();
 
         // Collisons
         void notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler);
@@ -55,6 +57,9 @@ namespace enviro {
 
         // Styles
         void set_style(json style);
+        void decorate(const std::string svg);
+        void label(const string str, double x, double y );
+        void clear_label();
 
         virtual ~AgentInterface() {} // needed to make dynamic_cast work
 

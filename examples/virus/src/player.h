@@ -14,13 +14,12 @@ class PlayerController : public Process, public AgentInterface {
         watch("keydown", [&](Event &e) {
             auto k = e.value()["key"].get<std::string>();
             if ( k == " " && !firing ) {
-                  std::cout << "fire!\n";
                   Agent& bullet = add_agent("Bullet", 
                     x() + 17*cos(angle()), 
                     y() + 17*sin(angle()), 
                     angle(), 
                     BULLET_STYLE);    
-                  bullet.apply_force(100,0);
+                    bullet.apply_force(50,0);
                   firing = true;
             } else if ( k == "w" ) {
                   f = magnitude;              

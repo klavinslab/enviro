@@ -111,10 +111,19 @@ double AgentInterface::sensor_value(int index) {
 std::vector<double> AgentInterface::sensor_values() {
     ASSERT_AGENT_EXISTS("sensor_values");
     return agent->sensor_values();
-}      
+}    
+
+std::string AgentInterface::sensor_reflection_type(int index) {
+    ASSERT_AGENT_EXISTS("sensor_reflection_type");
+    return agent->sensor_reflection_type(index);
+}
+
+std::vector<std::string> AgentInterface::sensor_reflection_types() {
+    ASSERT_AGENT_EXISTS("sensor_reflection_types");
+    return agent->sensor_reflection_types();
+}     
 
 // Collisions
-
 void AgentInterface::notice_collisions_with(const std::string agent_type, std::function<void(Event&)> handler) {
     ASSERT_AGENT_EXISTS("notice_collisions_with");
     agent->notice_collisions_with(agent_type, handler);  
@@ -156,4 +165,19 @@ Agent& AgentInterface::add_agent(const std::string name, double x, double y, dou
 void AgentInterface::set_style(json style) {
     ASSERT_AGENT_EXISTS("set_style");
     agent->set_style(style);    
+}
+
+void AgentInterface::decorate(const std::string svg) {
+    ASSERT_AGENT_EXISTS("decorate");
+    agent->decorate(svg);     
+}
+
+void AgentInterface::label(const string str, double x, double y ) {
+    ASSERT_AGENT_EXISTS("label");
+    agent->label(str, x, y);     
+}
+
+void AgentInterface::clear_label() {
+    ASSERT_AGENT_EXISTS("clear_label");
+    agent->clear_label();       
 }

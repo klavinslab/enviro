@@ -1,6 +1,7 @@
 #ifndef __WANDERER_AGENT__H
 #define __WANDERER_AGENT__H 
 
+#include <stdio.h>
 #include <string>
 #include <math.h>
 #include "enviro.h"
@@ -11,12 +12,13 @@ namespace {
 
     class MovingForward : public State, public AgentInterface {
         public:
-        void entry(const Event& e) {}
+        void entry(const Event& e) {
+        }
         void during() { 
             track_velocity(4,0);
             if ( sensor_value(0) < 40 ) {
                 emit(Event(tick_name));
-            }            
+            }    
         }
         void exit(const Event& e) {}
         void set_tick_name(std::string s) { tick_name = s; }
@@ -25,14 +27,23 @@ namespace {
 
     class Rotating : public State, public AgentInterface {
         public:
-        void entry(const Event& e) { rate = rand() % 2 == 0 ? 2 : -2; }
+        void entry(const Event& e) { 
+            rate = rand() % 2 == 0 ? 2 : -2; 
+            char buffer[1000];
+            sprintf(buffer, "<circle x='-5' y='5' r='5' style='fill: red'>%s</text>");
+            decorate(buffer);
+            label(sensor_reflection_type(0), 20, 5);
+        }
         void during() { 
             track_velocity(0,rate); 
             if ( sensor_value(0) > 140 ) {
                 emit(Event(tick_name));
-            }
+            }              
         }
-        void exit(const Event& e) {}
+        void exit(const Event& e) {
+            decorate(""); 
+            clear_label();
+        }
         double rate;
         void set_tick_name(std::string s) { tick_name = s; }
         std::string tick_name;        

@@ -8,9 +8,11 @@ cpVect rotate(cpVect v, cpFloat theta) {
     };
 }
 
-double RangeSensor::value() {
+std::pair<double,std::string> RangeSensor::value() {
 
     double distance = 10000;
+    std::string reflection_type = "None";
+
     World * world = _agent_ptr->get_world_ptr();
     // std::cout << "finding range sensor value\n";
 
@@ -22,7 +24,7 @@ double RangeSensor::value() {
     cpFloat angle = _angle + _agent_ptr->angle();              
     cpVect end = cpvadd(start, { x: 1000 * cos(angle), y: 1000 * sin(angle)});       
 
-    world->all([this, &distance, &start, &angle, &end](Agent& other) {
+    world->all([&](Agent& other) {
 
         if ( &other != _agent_ptr ) {
 
@@ -44,12 +46,13 @@ double RangeSensor::value() {
                 //           "    info.alpha = " << info.alpha << "\n";
                 if ( d < distance ) {
                     distance = d;
+                    reflection_type = other.name();
                 }
             }
         }
         
     });
 
-    return distance;
+    return std::make_pair(distance,reflection_type);
 
 }

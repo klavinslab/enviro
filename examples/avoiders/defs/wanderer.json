@@ -31,17 +31,7 @@
             "type": "range",
             "location": { "x": 12, "y": 0 },
             "direction": 0
-        },
-        { 
-            "type": "range",
-            "location": { "x": 0, "y": 10 },
-            "direction": 1.57
-        } ,
-        { 
-            "type": "range",
-            "location": { "x": 0, "y": -10 },
-            "direction": -1.57
-        }                        
+        }                      
     ],
     "mass": 0.25,
     "controller": "lib/wanderer.so"

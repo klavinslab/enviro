@@ -126,11 +126,19 @@ namespace enviro {
 
     double Agent::sensor_value(int index) {
         if ( index < _sensors.size() ) {
-            return _sensors[index]->value();
+            return _sensors[index]->value().first;
         } else {
             throw Exception("Sensor index out of range");
         }
     }    
+
+    std::string Agent::sensor_reflection_type(int index) {
+        if ( index < _sensors.size() ) {
+            return _sensors[index]->value().second;
+        } else {
+            throw Exception("Sensor index out of range");
+        }
+    }       
 
     std::vector<double> Agent::sensor_values() {
         std::vector<double> values;
@@ -139,6 +147,14 @@ namespace enviro {
         }
         return values;
     }
+
+    std::vector<std::string> Agent::sensor_reflection_types() {
+        std::vector<std::string> values;
+        for ( int i=0; i<_sensors.size(); i++ ) {
+            values.push_back(sensor_reflection_type(i));
+        }
+        return values;
+    }    
 
     void Agent::init() {
         for ( Process * p : _processes ) {
@@ -335,7 +351,14 @@ namespace enviro {
                 },
             },
             {"specification", _specification},
-            {"sensors", sensor_values() }
+            {"sensors", sensor_values() },
+            {"decoration", _decoration },
+            {"label", {
+                    { "text", _label },
+                    { "x", _label_x },
+                    { "y", _label_y }
+                } 
+            }
         };            
     }
 
