@@ -233,12 +233,6 @@ This method attepts to move the agent to the given (x,y) location. If something 
 > `void teleport(double x, double y, double theta)`<br>
 This method instantaneously moves the agent to the given position and orientation.
 
-> `double sensor_value(int index)`<br>
-This method returns the value of the specificed index. It is the distance from the location of the sensor to the nearest object in the direction the sensor is pointing. The index refers to the position in the sensor list in the agent's JSON definition. 
-
-> `std::vector<double> sensor_values()`<br>
-This method returns a list of all the sensor values, in the same order as the sensors appear in the agent's JSON definition.
-
 Motion Control For Omni Directional Agents
 ---
 
@@ -253,6 +247,21 @@ This method slows the agent down using the linear and angular friction coefficie
 
 > `void omni_move_toward(double x, double y, double v=1)`<br>
 This method attepts to move the agent to the given (x,y) location. If something in the way, the agent will not get there. The robot simultaneously attempts to rotate so that it is pointing toward the target and also moves forward, going faster as its angular error is reduced. The optional argument is the desired velocity of rotation and forward motion. &#x246A; New in 1.1.
+
+Sensors
+---
+
+> `double sensor_value(int index)`<br>
+This method returns the value of the specificed index. It is the distance from the location of the sensor to the nearest object in the direction the sensor is pointing. The index refers to the position in the sensor list in the agent's JSON definition. 
+
+> `std::vector<double> sensor_values()`<br>
+This method returns a list of all the sensor values, in the same order as the sensors appear in the agent's JSON definition.
+
+> `std::string sensor_reflection_type(int index)`<br>
+This method returns the name of object type the sensor of the specificed index is seeing. The index refers to the position in the sensor list in the agent's JSON definition. &#x246C; New in 1.3.
+
+> `std::vector<std::string> sensor_values()`<br>
+This method returns a list of all the sensor reflection types, in the same order as the sensors appear in the agent's JSON definition. &#x246C; New in 1.3.
 
 Collisions
 ---
@@ -270,6 +279,7 @@ Collisions
 >     });
 > }
 > ```
+> The value associated with the event `e` is a json object with a single key, `id`, which is the id of the other agent. 
 > &#x246B; New in 1.2.
 
 > `void ignore_collisions_with(const std::string agent_type)` <br>
@@ -326,6 +336,27 @@ Styling
 > Change the agent's style, just as in the configuration file. 
 > Any valid svg styling will work.
 > &#x246B; New in 1.2.
+
+> `void decorate(const std::string svg)`<br>
+> Add an aribtrary svg element to the agent's rendering method on the client side. 
+> The svg element will be transformed and rotated to the agent's coordinate system. 
+> For example, to place a red dot in the middle of the agent do:
+> ```c++
+> decorate("<circle x='-5' y='5' r='5' style='fill: red'></circle>");
+> ```
+> To clear the decoration later, simple call
+> ```c++
+> decorate("");
+> ```
+> &#x246C; New in 1.3.
+
+> `void label(const string str, double x, double y )` <br>
+> Add a textual label to the agent's icon. The x and y values are relative to the origin of the agent's coordinate system. 
+> &#x246C; New in 1.3.
+
+> `void clear_label()` <br>
+> Clear the label associated with the agent. 
+> &#x246C; New in 1.3.
 
 Project Configuration
 ===

@@ -29,9 +29,7 @@ namespace {
         public:
         void entry(const Event& e) { 
             rate = rand() % 2 == 0 ? 2 : -2; 
-            char buffer[1000];
-            sprintf(buffer, "<circle x='-5' y='5' r='5' style='fill: red'>%s</text>");
-            decorate(buffer);
+            decorate("<circle x='-5' y='5' r='5' style='fill: red'></circle>");
             label(sensor_reflection_type(0), 20, 5);
         }
         void during() { 
