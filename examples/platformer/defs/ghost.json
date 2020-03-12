@@ -1,0 +1,21 @@
+{
+    "name": "Ghost",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": [
+        { "x": -10, "y": 15 },
+        { "x": 10, "y": 15 },
+        { "x": 10, "y": -15 },
+        { "x": 0, "y": -17 },            
+        { "x": -10, "y": -15 }
+
+    ],
+    "friction": {
+      "collision": 5,
+      "linear": 40,
+      "rotational": 600
+    },
+    "sensors": [],
+    "mass": 1,    
+    "controller": "lib/ghost.so"
+}

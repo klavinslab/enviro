@@ -1,0 +1,119 @@
+{
+
+    "name": "My Enviro Project",
+    "ip": "0.0.0.0",
+    "port": 8765,
+
+    "buttons": [],
+
+    "agents": [  
+        {
+            "definition": "defs/guy.json",
+            "style": { "fill": "lightblue", "stroke": "black" },
+            "position": {
+                "x": 0, 
+                "y": 135, 
+                "theta": 0
+            }
+        },
+        {
+            "definition": "defs/bumper.json",
+            "style": { "fill": "red", "stroke": "none" },
+            "position": {
+                "x": -145, 
+                "y": 68, 
+                "theta": 0
+            }
+        },
+        {
+            "definition": "defs/bumper.json",
+            "style": { "fill": "red", "stroke": "none" },
+            "position": {
+                "x": 145, 
+                "y": 68, 
+                "theta": 0
+            }
+        },
+        {
+            "definition": "defs/ghost.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
+            "position": {
+                "x": 0, 
+                "y": 80, 
+                "theta": 0
+            }
+        }
+
+    ],
+
+    "statics": [
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -350, "y": -200 },
+                { "x": -350,  "y": 200 },
+                { "x": -340,  "y": 200 },
+                { "x": -340, "y": -200 }
+            ]
+        },
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": 350, "y": -200 },
+                { "x": 350,  "y": 200 },
+                { "x": 340,  "y": 200 },
+                { "x": 340, "y": -200 }
+            ]
+        },
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -350, "y": 200 },
+                { "x": 350,  "y": 200 },
+                { "x": 350,  "y": 190 },
+                { "x": -350, "y": 190 }
+            ]
+        },
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -350, "y": -200 },
+                { "x": 350,  "y": -200 },
+                { "x": 350,  "y": -190 },
+                { "x": -350, "y": -190 }
+            ]
+        },
+
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -350, "y": 125 },
+                { "x": -250, "y": 125 },
+                { "x": -250, "y": 115 },
+                { "x": -350, "y": 115 }
+            ]
+        },
+
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -150, "y": 90 },
+                { "x": 150, "y": 90 },
+                { "x": 150, "y": 80 },
+                { "x": -150, "y": 80 }
+            ]
+        },
+
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": 350, "y": 55 },
+                { "x": 250, "y": 55 },
+                { "x": 250, "y": 45 },
+                { "x": 350, "y": 45 }
+            ]
+        }       
+
+    ]
+
+}

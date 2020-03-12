@@ -48,6 +48,8 @@ namespace enviro {
 
         // Constraints
         void attach_to(Agent &other_agent);
+        void prevent_rotation();
+        void allow_rotation();
 
         // Agent management
         Agent& find_agent(int id);

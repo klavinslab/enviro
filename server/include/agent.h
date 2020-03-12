@@ -94,7 +94,9 @@ namespace enviro {
         Agent& handle_collision(const Agent &other);     
 
         // Constraints
-        Agent& attach_to(Agent &agent);        
+        Agent& attach_to(Agent &agent);
+        Agent& prevent_rotation();
+        Agent& allow_rotation();               
 
         // Other getters
         inline World * get_world_ptr() { return _world_ptr; }
@@ -136,6 +138,7 @@ namespace enviro {
         void setup_sensors();
         map<string, std::function<void(Event&)>> collision_handlers;
         bool _alive;
+        double _moment_of_inertia;
 
         // Decorations
         std::string _decoration;

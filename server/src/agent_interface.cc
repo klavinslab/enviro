@@ -145,6 +145,16 @@ void AgentInterface::attach_to(Agent &other_agent) {
     agent->attach_to(other_agent);  
 }
 
+void AgentInterface::prevent_rotation() {
+    ASSERT_AGENT_EXISTS("prevent_rotation");
+    agent->prevent_rotation();  
+}
+
+void AgentInterface::allow_rotation() {
+    ASSERT_AGENT_EXISTS("allow_rotation");
+    agent->allow_rotation();  
+}
+
 // Agent Management
 void AgentInterface::remove_agent(int id) {
     ASSERT_AGENT_EXISTS("remove_agent");

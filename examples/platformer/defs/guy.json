@@ -1,0 +1,30 @@
+{
+    "name": "Guy",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": [
+        { "x": -10, "y": 15 },
+        { "x": 10, "y": 15 },
+        { "x": 10, "y": -15 },
+        { "x": -10, "y": -15 }
+    ],
+    "friction": {
+      "collision": 0,
+      "linear": 0,
+      "rotational": 0
+    },
+    "sensors": [
+      { 
+        "type": "range",
+        "location": { "x": 10, "y": 15 },
+        "direction": 1.57
+      },
+      { 
+        "type": "range",
+        "location": { "x": -10, "y": 15 },
+        "direction": 1.57
+      }            
+    ],
+    "mass": 1,    
+    "controller": "lib/guy.so"
+}

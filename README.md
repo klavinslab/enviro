@@ -215,6 +215,12 @@ This method returns the angular velocity of the agent in radians per second and 
 > `int id()`<br>
 This method returns a unique id of the agent.
 
+> `void prevent_rotation()`<br>
+Prevents the agent from rotating. Probably best to call in the init function. Good for platformer type movement. Technically sets the moment of inertia to infinity. &#x246D; New in 1.4.
+
+> `void allow_rotation()` <br>
+Allows the agent to rotate, setting the moment of inertia to the default number (based on the mass and shape of the agent). &#x246D; New in 1.4.
+
 Motion Control for Oriented Agents
 ---
 

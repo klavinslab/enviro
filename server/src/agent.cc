@@ -37,7 +37,7 @@ namespace enviro {
                 vertices[i++] = cpv(v["x"], v["y"]);
             }
 
-            cpFloat moment = cpMomentForPoly(
+            _moment_of_inertia = cpMomentForPoly(
                 specification["definition"]["mass"], 
                 num_vertices, 
                 vertices, 
@@ -47,7 +47,7 @@ namespace enviro {
                 space, 
                 cpBodyNew(
                     specification["definition"]["mass"], 
-                    moment));
+                    _moment_of_inertia));
 
             // std::cout << "pos func " << (long int) _body->position_func << "\n";
 
@@ -70,7 +70,7 @@ namespace enviro {
 
         } else {
 
-            cpFloat moment = cpMomentForCircle(
+            _moment_of_inertia = cpMomentForCircle(
                 specification["definition"]["mass"], 
                 specification["definition"]["radius"],
                 specification["definition"]["radius"],
@@ -80,7 +80,7 @@ namespace enviro {
                 space, 
                 cpBodyNew(
                     specification["definition"]["mass"], 
-                    moment));    
+                    _moment_of_inertia));    
 
             cpBodySetPosition(_body, cpv(
                 specification["position"]["x"], 
@@ -96,7 +96,7 @@ namespace enviro {
         }
 
         cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>()); 
-        cpShapeSetElasticity(_shape, 0.5);        
+        cpShapeSetElasticity(_shape, 0.0);        
 
         if ( specification["definition"]["type"] == "static" ) {
             cpBodySetType(_body, CP_BODY_TYPE_STATIC);
@@ -398,6 +398,16 @@ namespace enviro {
         _world_ptr->add_constraint(*this, agent);
         return *this;
     } 
+
+    Agent& Agent::prevent_rotation() {
+        cpBodySetMoment(_body, INFINITY);
+        return *this;
+    }
+
+    Agent& Agent::allow_rotation() {
+        cpBodySetMoment(_body, _moment_of_inertia);
+        return *this;
+    }     
 
     // Styles
     Agent& Agent::set_style(json style) {
