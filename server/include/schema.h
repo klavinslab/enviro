@@ -20,7 +20,23 @@ inline json ENVIRO_CONFIG_SCHEMA = R"(
                     "theta": 0
                 }
             }
-        ],    
+        ],
+        "references": [
+            {
+                "definition": "",
+                "style": { "stroke": "", "fill": "" },
+                "position": {
+                    "x": 0, 
+                    "y": 0, 
+                    "theta": 0
+                }
+            }     
+        ],
+        "invisibles": [
+            {
+                "definition": ""
+            }
+        ],        
         "statics": [
             {
                 "style": { "stroke": "", "fill": "" },
@@ -75,6 +91,33 @@ inline json ENVIRO_OMNI_AGENT_SCHEMA = R"(
             }
         ],
         "mass": 0,    
+        "controller": ""
+    }
+)"_json;
+
+inline json ENVIRO_NONINTERACTIVE_SCHEMA = R"(
+    {
+        "name": "",
+        "type": "",
+        "description": "",
+        "shape": [
+            { "x": 0, "y": 0 }
+        ],
+        "sensors": [
+            {
+                "location": { "x": 0, "y": 0 },
+                "direction": 0
+            }
+        ], 
+        "controller": ""
+    }
+)"_json;
+
+inline json ENVIRO_INVISIBLE_SCHEMA = R"(
+    {
+        "name": "",
+        "type": "",
+        "description": "",
         "controller": ""
     }
 )"_json;

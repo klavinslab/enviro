@@ -20,6 +20,12 @@ class DummyState : public State {
 int main() {
 
     json config = json_helper::read("config.json");
+    if ( config["invisibles"].is_null() ) {
+        config["invisibles"] = json::array();
+    }
+    if ( config["references"].is_null() ) {
+        config["references"] = json::array();
+    }    
     json_helper::check(config, ENVIRO_CONFIG_SCHEMA);
 
     Manager m;

@@ -13,11 +13,23 @@ namespace enviro {
         for ( auto agent_entry : config["agents"] ) {
             json spec = Agent::build_specification(agent_entry);
             AGENT_TYPE * at = add_agent_type(spec);
-            // TODO: Check if agent entry should be made (some might not be made initially, like bullets)
             auto agent_ptr = at->create_agent(spec, *this); 
             agent_ptr->set_destroyer(at->destroy_agent);
             add_agent(*agent_ptr);
         }
+
+        for ( auto agent_entry : config["references"] ) {
+            json spec = Agent::build_specification(agent_entry);
+            AGENT_TYPE * at = add_agent_type(spec);
+        }        
+
+        for ( auto agent_entry : config["invisibles"] ) {
+            json spec = Agent::build_specification(agent_entry);
+            AGENT_TYPE * at = add_agent_type(spec);
+            auto agent_ptr = at->create_agent(spec, *this); 
+            agent_ptr->set_destroyer(at->destroy_agent);
+            add_agent(*agent_ptr);
+        }            
 
         for ( auto static_entry : config["statics"] ) {
             json spec = StaticObject::build_specification(static_entry);
@@ -27,20 +39,11 @@ namespace enviro {
 
     }
 
-    Agent& World::add_agent(const std::string name, double x, double y, double theta, const json style) { 
-
-        std::cout << "Adding agent of type " << name << "\n";
-
-        
+    Agent& World::add_agent(const std::string name, double x, double y, double theta, const json style) {      
 
         if ( agent_types.find(name) == agent_types.end() ) {
             throw std::runtime_error("Could not add new agent. Unknown type.");
-        } else {
-            std::cout << "Agent type " << name << " exists\n";
-        }
-        for ( std::pair<std::string, AGENT_TYPE *> x : agent_types) {
-            std::cout << "   " << x.first << ", type " << (long int) x.second << "\n";
-        }
+        } 
 
         auto at = agent_types[name];
         json new_spec = at->specification;
@@ -52,7 +55,8 @@ namespace enviro {
         auto agent_ptr = at->create_agent(new_spec, *this); 
         agent_ptr->set_destroyer(at->destroy_agent);
         new_agents.push_back(agent_ptr);
-        agent_ptr->init();
+        agent_ptr->set_manager(manager_ptr);
+        agent_ptr->init(); 
         agent_ptr->start();
         return *agent_ptr;
     }
@@ -213,13 +217,10 @@ namespace enviro {
                 // remove all constraints involving the agent,
                 // remove its body and shape from the physics engine,
                 // remove it from the manager, and then destroy it
-                std::cout << "removing agent " << a->get_id() << "\n";
                 remove_constraints_involving(a->get_id());
                 cpSpaceRemoveShape(space, a->_shape);
                 cpSpaceRemoveBody(space, a->_body);
                 manager_ptr->remove(*a);
-                // a->_destroyer(a); // deleting here deletes before the manager removes the processs
-                                     // to where should I delete this? Next time through?
                 garbage.push_back(a);
             }
             return !a->is_alive();

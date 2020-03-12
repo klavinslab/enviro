@@ -56,6 +56,8 @@ namespace enviro {
         bool agent_exists(int id);
         void remove_agent(int id);
         Agent& add_agent(const std::string name, double x, double y, double theta, const json style);
+        void set_client_id(std::string str);
+        std::string get_client_id();
 
         // Styles
         void set_style(json style);

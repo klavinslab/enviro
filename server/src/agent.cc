@@ -12,9 +12,11 @@ namespace enviro {
         _specification(specification),
         _world_ptr(&world), 
         _alive(true),
+        _invisible(specification["definition"]["type"] == "invisible"),
         Process(specification["definition"]["name"].get<string>()) {
 
         cpSpace * space = world.get_space();
+
         if ( !space ) {
             throw std::runtime_error("Uninitialized physics space in agent constructor");
         }
@@ -25,9 +27,7 @@ namespace enviro {
 
         _id = _next_id++;
 
-        std::cout << specification << "\n";
-
-        if ( specification["definition"]["shape"].is_array() ) {
+        if ( specification["definition"]["type"] == "invisible" || specification["definition"]["shape"].is_array() ) {
 
             int num_vertices = specification["definition"]["shape"].size();
             cpVect *vertices = (cpVect *) calloc(num_vertices, sizeof(cpVect));
@@ -37,37 +37,43 @@ namespace enviro {
                 vertices[i++] = cpv(v["x"], v["y"]);
             }
 
-            _moment_of_inertia = cpMomentForPoly(
-                specification["definition"]["mass"], 
-                num_vertices, 
-                vertices, 
-                cpvzero, 1);
+            if ( specification["definition"]["type"] == "dynamic" || specification["definition"]["type"] == "static" ) {
+                _moment_of_inertia = cpMomentForPoly(
+                    specification["definition"]["mass"], 
+                    num_vertices, 
+                    vertices, 
+                    cpvzero, 1);
+            } else {
+                _moment_of_inertia = 1;
+            }
 
             _body = cpSpaceAddBody(
                 space, 
                 cpBodyNew(
-                    specification["definition"]["mass"], 
+                    !specification["definition"]["mass"].is_null() ? specification["definition"]["mass"].get<double>() : 1, 
                     _moment_of_inertia));
 
-            // std::cout << "pos func " << (long int) _body->position_func << "\n";
+            if ( specification["definition"]["type"] != "invisible" ) {
+                cpBodySetPosition(_body, cpv(
+                    specification["position"]["x"], 
+                    specification["position"]["y"]
+                ));
+                cpBodySetAngle(_body, specification["position"]["theta"]);
+            } else {
+                cpBodySetPosition(_body, cpv(0,0));
+                cpBodySetAngle(_body, 0);                
+            }
 
-            cpBodySetPosition(_body, cpv(
-                specification["position"]["x"], 
-                specification["position"]["y"]
-            ));
-
-            cpBodySetAngle(_body, specification["position"]["theta"]);
-
-            _shape = cpSpaceAddShape(
-                space, 
-                cpPolyShapeNew(
-                    _body, 
-                    num_vertices, 
-                    vertices, 
-                    IDENTITY, 1));
+            if ( specification["definition"]["type"] == "dynamic" || specification["definition"]["type"] == "static" ) {
+                _shape = cpSpaceAddShape(
+                    space, 
+                    cpPolyShapeNew(
+                        _body, 
+                        num_vertices, 
+                        vertices, 
+                        IDENTITY, 1));
+            }
             
-            std::cout << "Added new physics stuff for agent " << _id << "\n";
-
         } else {
 
             _moment_of_inertia = cpMomentForCircle(
@@ -91,18 +97,18 @@ namespace enviro {
                 space, 
                 cpCircleShapeNew(_body, specification["definition"]["radius"], cpv(0,0)));  
 
-            std::cout << "Added new physics stuff for agent " << _id << "\n";                
-                                                                          
         }
 
-        cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>()); 
-        cpShapeSetElasticity(_shape, 0.0);        
+        if ( specification["definition"]["type"] == "dynamic" || specification["definition"]["type"] == "static" ) {
+          cpShapeSetFriction(_shape, specification["definition"]["friction"]["collision"].get<cpFloat>()); 
+          cpShapeSetElasticity(_shape, 0.0);       
+          cpShapeSetCollisionType(_shape, AGENT_COLLISION_TYPE); 
+        }
 
         if ( specification["definition"]["type"] == "static" ) {
             cpBodySetType(_body, CP_BODY_TYPE_STATIC);
         }
 
-        cpShapeSetCollisionType(_shape, AGENT_COLLISION_TYPE);
         cpBodySetUserData(_body, this);
 
         setup_sensors();
@@ -328,7 +334,6 @@ namespace enviro {
     }    
 
     Agent::~Agent() {
-        std::cout << "Deleting agent " << get_id() << "\n";
         cpShapeFree(_shape);
         cpBodyFree(_body);
     }
@@ -424,11 +429,21 @@ namespace enviro {
         return _world_ptr->add_agent(name,x,y,theta,style); 
     }
 
+    Agent& Agent::set_client_id(std::string str) {
+        _client_id = str;
+        return *this;
+    }
+    std::string Agent::get_client_id() {
+        return _client_id;
+    }
+
     // Class wide methods /////////////////////////////////////////
 
     json Agent::build_specification(json agent_entry) {
 
-        json result = agent_entry, definition;
+        json result = agent_entry, 
+             definition;
+
         try {
             definition = json_helper::read(result["definition"]);
         } catch ( const nlohmann::detail::parse_error &e ) {
@@ -439,13 +454,32 @@ namespace enviro {
             throw std::runtime_error(msg);
         }
 
-        if ( !definition["shape"].is_null() && definition["shape"].is_array() ) {
-            json_helper::check(definition, ENVIRO_AGENT_SCHEMA);
-        } else if ( !definition["shape"].is_null() && definition["shape"].is_string() && definition["shape"] == "omni" ) {
-            json_helper::check(definition, ENVIRO_OMNI_AGENT_SCHEMA);
-        } else {
-            std::string msg = "Could not find a valid shape definition in agent definition in ";
+        if ( definition["type"].is_null() ) {
+            std::string msg = "The definiton in ";
             msg += result["definition"];
+            msg += " has no type specified";
+            throw std::runtime_error(msg);
+        }
+
+        if ( definition["type"] == "dynamic" || definition["type"] == "static" ) {
+            if ( !definition["shape"].is_null() && definition["shape"].is_array() ) {
+                json_helper::check(definition, ENVIRO_AGENT_SCHEMA);
+            } else if ( !definition["shape"].is_null() && definition["shape"].is_string() && definition["shape"] == "omni" ) {
+                json_helper::check(definition, ENVIRO_OMNI_AGENT_SCHEMA);
+            } else { 
+                std::string msg = "Could not find a valid shape definition in agent definition in ";
+                msg += result["definition"];
+                throw std::runtime_error(msg);
+            }
+        } else if ( definition["type"] == "noninteractive" ) {
+            json_helper::check(definition, ENVIRO_NONINTERACTIVE_SCHEMA);
+        } else if ( definition["type"] == "invisible" ) {
+            json_helper::check(definition, ENVIRO_INVISIBLE_SCHEMA);
+        } else {
+            std::string msg = "The definiton in ";
+            msg += result["definition"];
+            msg += " has and unknown type";
+            msg += definition["type"];
             throw std::runtime_error(msg);
         }
 

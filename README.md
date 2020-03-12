@@ -119,20 +119,26 @@ The JSON files in the  `defs/` directory should contain an object with the follo
 A string defining the name of the agent.
 
 > `type`<br>
-Either "dynamic" or "static". If "dynamic", then the agent will move, have mass, etc. If "static" then the agent will not move but will still be something other agents will collide with (i.e. like a wall).
+> - "dynamic": the agent will move, have mass, etc. 
+> - "static": the agent will not move but will still be something other agents will collide with (i.e. like a wall).
+> - "noninteractive": The agent will not by simulated with any physics. Other agents will pass through it. &#x246E; New in 1.5.
+> - "invisible": The agent is noninteractive and invisible. It can be used to run background processes not associated with visible elements.  &#x246E; New in 1.5.
 
 > `description`<br>
 A string describing the agent.
 
 > `shape`<br>
 > ***polygon shaped:*** A list of pairs of the form `{ "x": 10, "y": 12 }` defining the vertices of a polygon. The physics engine will use this to determine the moment of initial and collision shape of the robot, and the user interface will use it to render the agent. All points are relative to the robot's center.<br>
-> ***circular:*** The string "omni", which makes a circular omni-directional agent. If you choose this option, you also need to specify a "radius". &#x246A; New in 1.1. 
+> ***circular:*** The string "omni", which makes a circular omni-directional agent. If you choose this option, you also need to specify a "radius". &#x246A; New in 1.1. Does not work with "noninteractive"<br>
+> This field should not be present in "invisible" agents.
 
 > `radius`<br>
-The radius of a circular, omnidirectional robot. Only used when the `shape` field is "omni". &#x246A; New in 1.1. 
+> The radius of a circular, omnidirectional robot. 
+> Only used when the `shape` field is "omni". &#x246A; New in 1.1. 
+> This field should be present in "invisible" agents.
 
 > `friction`<br>
-An object with three numerical fields, `collision`, `linear`, and `rotational` defining the fricition coefficients of the robot with other robots and with the environment. Note that the latter two coefficients are only used if you apply a control in your `update()` methods such as `damp_movement()` or `track_velocity()`. 
+An object with three numerical fields, `collision`, `linear`, and `rotational` defining the fricition coefficients of the robot with other robots and with the environment. Note that the latter two coefficients are only used if you apply a control in your `update()` methods such as `damp_movement()` or `track_velocity()`. This field should not be present in "invisible" agents. 
 
 > `sensors`<br>
 > A list of range sensor definitions of the form (for example):
@@ -144,13 +150,13 @@ An object with three numerical fields, `collision`, `linear`, and `rotational` d
 >}
 >```
 > The location field is relative to the robot's center. The direction is an angle in radians. 
+> This field should not be present in "invisible" agents. &#x246E; New in 1.5.
 
 > `mass`<br>
-A number defining the mass of the robot.
+A number defining the mass of the robot. This field should not be present in "invisible" agents. &#x246E; New in 1.5.
 
 > `controller`<br>
 A path to the shared object library for the agent, such as `lib/my_robot.so`. 
-
 
 The Agent Class
 ---
@@ -335,6 +341,13 @@ Agent Management
 > ```
 > &#x246B; New in 1.2.
 
+> `void set_client_id(std::string str)`<br>
+> Set a string id of the agent. &#x246E; New in 1.5.
+
+> `std::string get_client_id()`<br>
+> Retrieve the string id of the agent (whatever has been set by `set_client_id`). &#x246E; New in 1.5.
+
+
 Styling
 ---
 
@@ -406,6 +419,17 @@ The port for the server. Use `8765` for now.
 > ```
 > The definition field should point to a shared object library. The style field can be any `svg` styling code. The position and orientation are the **initial** position and orientation of the agent.
 
+> `references`<br>
+> A list of agents to that may be put into the simulation by the `add_agent()` method, but that are not listed in the `agents` list. The format of each entry is the same as for the `agents` list. 
+
+> `invisibles`<br>
+> A list of invisible agents (must have type `invisible` in the corresponding `defs/*.json` file).
+> ```json
+> {
+>     "definition": "defs/my_invisible_process.json"
+> }
+> ```
+
 > `statics`<br>
 > A list of static objects to place in the environment. For example,
 > ```json
@@ -424,19 +448,28 @@ The port for the server. Use `8765` for now.
 Responding to Front End Events
 ===
 
-The brower client relays mouse click, button press, and keyboard events to the enviro server, which your process can watch for. The event types and associated information are:
+The brower client relays mouse click, button press, and keyboard events to the enviro server, which your process can watch for. As of &#x246E; Version 1.5 all events also contain a client specific unique ID that you can use to determine which client the event came from. The event types and associated information are as follows:
+
+> Name: `connection`<br>
+> Event: Sent when a new client attaches to the enviro server.<br>
+> Value: An object with a string valued `id` field that should be unique to the client that has connected.
+> Note that this ID will be sent with all other events as well. &#x246E; New in 1.5
 
 > Name: `screen_click`<br>
+> Event: Sent when a user clicks on the screen.<br>
 > Value: An object with `x` and `y` fields holding the location of the click in world coordinates.
 
 > Name: `agent_click`<br>
+> Event: Sent when a user clicks on an agent.<br>
 > Value: An object with `id`, `x` and `y` fields holding the agent's id and the location of the click in **agent** coordinates. 
 
 > Name: `button_click`<br>
+> Sent when a user clicks on a button. The buttons need to be defined in `config.json`. <br>
 > Value: An object with the a `name` field that matches the name field used in `config.json`. 
 > &#x2469; New in 1.0.
 
 > Name: `keydown`<br>
+> Sent when a user presses a key down.<br>
 > Value: An object with a `key` field, which is the character pressed, as well as the following boolean fields
 > ```
 > ctrlKey
@@ -447,6 +480,7 @@ The brower client relays mouse click, button press, and keyboard events to the e
 > &#x2469; New in 1.0.
 
 > Name: `keyup`<br>
+> Sent when a user release a key.<br>
 > Value: Same as for `keydown`. 
 > &#x2469; New in 1.0.
 
@@ -465,4 +499,10 @@ Debugging Tools
 ===
 
 The user interface is written in Javascript using React. If you are using Chrome, you can install [this plugin](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en). Then you can open the Chrome developer tools, click the ***Components*** tab, and then click on `Enviro` which will bring up the state on the right panel. Expand `data` to see information about all the agents. 
+
+You can also see the client's ID by entering 
+```json
+CLIENT_ID
+```
+into the Javascript console. &#x246E; New in 1.5.
 

@@ -171,6 +171,16 @@ Agent& AgentInterface::add_agent(const std::string name, double x, double y, dou
     return agent->add_agent(name, x, y, theta, style); 
 }
 
+void AgentInterface::set_client_id(std::string str) {
+    ASSERT_AGENT_EXISTS("set_client_id");
+    agent->set_client_id(str); 
+}
+
+std::string AgentInterface::get_client_id() {
+    ASSERT_AGENT_EXISTS("get_client_id");
+    return agent->get_client_id(); 
+}
+
 // Style
 void AgentInterface::set_style(json style) {
     ASSERT_AGENT_EXISTS("set_style");

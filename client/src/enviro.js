@@ -7,6 +7,20 @@
 
 const e = React.createElement;
 
+var CLIENT_ID;
+
+function generate_id(){
+  // Source: https://gist.github.com/gordonbrander/2230317
+  function chr4(){
+    return Math.random().toString(16).slice(-4);
+  }
+  return chr4() + chr4() +
+    '-' + chr4() +
+    '-' + chr4() +
+    '-' + chr4() +
+    '-' + chr4() + chr4() + chr4();
+}
+
 class Loading extends React.Component {
   render() {
     return <div className='message'>Loading ...</div>
@@ -37,6 +51,8 @@ class Sensor extends React.Component {
 }
 
 function post_event(data) {
+  let data_with_id = data;
+  data_with_id.id = CLIENT_ID;
   fetch('http://127.0.0.1:8765/event', {
     method: "POST", 
     mode: 'no-cors',
@@ -180,7 +196,7 @@ class Enviro extends React.Component {
   }
 
   get_configuration() {
-    fetch("http://127.0.0.1:8765/config")
+    fetch("http://127.0.0.1:8765/config/"+CLIENT_ID)
       .then(res => res.json())
       .then(
         res => {
@@ -198,7 +214,7 @@ class Enviro extends React.Component {
   }
 
   tick() {
-    fetch("http://127.0.0.1:8765/state")
+    fetch("http://127.0.0.1:8765/state/"+CLIENT_ID)
       .then(res => res.json())
       .then(
         (result) => {
@@ -211,6 +227,7 @@ class Enviro extends React.Component {
           });
         },
         (error) => {
+          console.log(error);
           this.setState({
             mode: "connecting",
             error
@@ -223,7 +240,11 @@ class Enviro extends React.Component {
 
   componentDidMount() {
 
-    this.setState({ mode: "connecting" }, this.update);
+    CLIENT_ID = generate_id();
+
+    this.setState({ 
+      mode: "connecting"
+    }, this.update);
 
     document.addEventListener("keydown", e => {
       post_event({

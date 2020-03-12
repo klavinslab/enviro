@@ -125,6 +125,9 @@ namespace enviro {
         inline void mark_for_removal() { _alive = false; }
         inline bool is_alive() { return _alive; }
         Agent& add_agent(const std::string name, double x, double y, double theta, const json style);
+        inline bool visible() const { return !_invisible; }
+        Agent& set_client_id(std::string str);
+        std::string get_client_id();
 
         private:
         cpBody * _body;
@@ -139,6 +142,8 @@ namespace enviro {
         map<string, std::function<void(Event&)>> collision_handlers;
         bool _alive;
         double _moment_of_inertia;
+        bool _invisible;
+        std::string _client_id;
 
         // Decorations
         std::string _decoration;
