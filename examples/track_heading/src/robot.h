@@ -22,7 +22,7 @@ class RobotController : public Process, public AgentInterface {
             counter = 0;
         }
         track_velocity(20,30*sin(desired_heading-angle()) - 100*angular_velocity());
-        label(std::to_string((int) (2*desired_heading/M_PI)) + " pi",15,-15);
+        label(std::to_string(((int) (2*desired_heading/M_PI))/2.0) + " pi",15,-15);
     }
     void stop() {}
 
