@@ -9,6 +9,8 @@ const e = React.createElement;
 
 var CLIENT_ID;
 
+var HOST = window.location.href.substring(0, window.location.href.length - 1);
+
 function generate_id(){
   // Source: https://gist.github.com/gordonbrander/2230317
   function chr4(){
@@ -53,7 +55,7 @@ class Sensor extends React.Component {
 function post_event(data) {
   let data_with_id = data;
   data_with_id.id = CLIENT_ID;
-  fetch('http://127.0.0.1:8765/event', {
+  fetch(HOST+':8765/event', {
     method: "POST", 
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json'},
@@ -196,7 +198,7 @@ class Enviro extends React.Component {
   }
 
   get_configuration() {
-    fetch("http://127.0.0.1:8765/config/"+CLIENT_ID)
+    fetch(HOST+":8765/config/"+CLIENT_ID)
       .then(res => res.json())
       .then(
         res => {
@@ -214,7 +216,7 @@ class Enviro extends React.Component {
   }
 
   tick() {
-    fetch("http://127.0.0.1:8765/state/"+CLIENT_ID)
+    fetch(HOST+":8765/state/"+CLIENT_ID)
       .then(res => res.json())
       .then(
         (result) => {

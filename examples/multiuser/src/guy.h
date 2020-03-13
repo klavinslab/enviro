@@ -51,6 +51,7 @@ class GuyController : public Process, public AgentInterface {
     void start() {}
     void update() {
         apply_force(f,tau);
+        label(std::to_string((int) x()) + ", " + std::to_string((int)y()),20,20);
     }
     void stop() {}
 
@@ -60,8 +61,8 @@ class GuyController : public Process, public AgentInterface {
     const json BULLET_STYLE = { 
                    {"fill", "green"}, 
                    {"stroke", "#888"}, 
-                   {"stroke-width", "5px"},
-                   {"stroke-opacity", "0.25"}
+                   {"strokeWidth", "5px"},
+                   {"strokeOpacity", "0.25"}
                };
 
 };
