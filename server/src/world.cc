@@ -191,8 +191,9 @@ namespace enviro {
     }
 
     void World::remove(int id) {
-        std::cout << "marking " << id << " for removal" << "\n";
-        find_agent(id).mark_for_removal();
+        if ( exists(id) ) {
+            find_agent(id).mark_for_removal();
+        }
     }
 
     void World::remove_constraints_involving(int id) {
