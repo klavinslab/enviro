@@ -12,7 +12,7 @@ class GuyController : public Process, public AgentInterface {
 
     void init() {
         watch("keydown", [&](Event &e) {
-            if ( e.value()["id"] == get_client_id() ) {
+            if ( e.value()["client_id"] == get_client_id() ) {
                 auto k = e.value()["key"].get<std::string>();
                 if ( k == " " && !firing ) {
                     Agent& bullet = add_agent("Bullet", 
@@ -34,7 +34,7 @@ class GuyController : public Process, public AgentInterface {
             }
         });        
         watch("keyup", [&](Event &e) {
-            if ( e.value()["id"] == get_client_id() ) {            
+            if ( e.value()["client_id"] == get_client_id() ) {            
                 auto k = e.value()["key"].get<std::string>();
                 if ( k == " " ) {
                     firing = false;

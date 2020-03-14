@@ -43,10 +43,13 @@ class PlayerController : public Process, public AgentInterface {
                   tau = 0;
             } 
         });
+        center(x(), y());
+        zoom(2);
     }
-    void start() {}
+    void start() { }
     void update() {
         apply_force(f,tau);
+        center(x(), y());
     }
     void stop() {}
 
@@ -56,8 +59,8 @@ class PlayerController : public Process, public AgentInterface {
     const json BULLET_STYLE = { 
                    {"fill", "green"}, 
                    {"stroke", "#888"}, 
-                   {"stroke-width", "5px"},
-                   {"stroke-opacity", "0.25"}
+                   {"strokeWidth", "5px"},
+                   {"strokeOpacity", "0.25"}
                };
 
 };

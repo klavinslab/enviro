@@ -19,7 +19,7 @@ class VirusController : public Process, public AgentInterface {
             host.set_style(INFECTED_HOST_STYLE);
             ignore_collisions_with("Cell");
             counter = 0;
-        });        
+        });            
     }
 
     void start() {}
@@ -56,14 +56,14 @@ class VirusController : public Process, public AgentInterface {
     const json INFECTED_HOST_STYLE = { 
                    {"fill", "lightgreen"}, 
                    {"stroke", "#aaa"}, 
-                   {"stroke-width", "10px"},
-                   {"stroke-opacity", "0.25"}
+                   {"strokeWidth", "10px"},
+                   {"strokeOpacity", "0.25"}
                },
                VIRUS_STYLE = { 
                    {"fill", "orange"}, 
                    {"stroke", "black"}, 
-                   {"stroke-width", "10px"},
-                   {"stroke-opacity", "0.25"}
+                   {"strokeWidth", "10px"},
+                   {"strokeOpacity", "0.25"}
                };            
 
 };

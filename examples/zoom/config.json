@@ -1,6 +1,6 @@
 {
 
-    "name": "Click to make the robot chase the block",
+    "name": "My Enviro Project",
     "ip": "0.0.0.0",
     "port": 8765,
 
@@ -16,31 +16,54 @@
             "style": { "background": "white", "borderColor": "black" }
         },
         {
-            "name": "toggle_track",
-            "label": "Toggle Tracking",
+            "name": "center_one",
+            "label": "Center One",
             "style": { "background": "white", "borderColor": "black" }
-        }                  
+        },
+        {
+            "name": "center_two",
+            "label": "Center Two",
+            "style": { "background": "white", "borderColor": "black" }
+        }                                
     ],
 
-    "agents": [         
+    "agents": [    
         {
-            "definition": "defs/teleporter.json",
-            "style": { "fill": "orange", "stroke": "black" },
+            "definition": "defs/thing.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
             "position": {
-                "x": 0, 
-                "y": 0, 
+                "x": -50, 
+                "y": -50, 
                 "theta": 0
             }
         },
         {
-            "definition": "defs/chaser.json",
+            "definition": "defs/thing.json",
             "style": { "fill": "lightgreen", "stroke": "black" },
             "position": {
-                "x": 110, 
-                "y": 110, 
-                "theta": 1.5
+                "x": -50, 
+                "y": 50, 
+                "theta": 0
             }
-        }                         
+        },
+        {
+            "definition": "defs/thing.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
+            "position": {
+                "x": 50, 
+                "y": 50, 
+                "theta": 0
+            }
+        },
+        {
+            "definition": "defs/thing.json",
+            "style": { "fill": "lightgreen", "stroke": "black" },
+            "position": {
+                "x": 50, 
+                "y": -50, 
+                "theta": 0
+            }
+        }                                
     ],
 
     "statics": [

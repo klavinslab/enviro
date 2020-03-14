@@ -4,7 +4,13 @@
 
 namespace enviro {
 
-    World::World(json config, Manager& m) : Process("World"), config(config), manager_ptr(&m) {
+    World::World(json config, Manager& m) 
+      : Process("World"), 
+        config(config), 
+        manager_ptr(&m),
+        center_x(0),
+        center_y(0),
+        zoom(1) {
 
         space = cpSpaceNew();
         timeStep = 1.0/60.0; // TODO: move to config.json

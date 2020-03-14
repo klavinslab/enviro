@@ -351,6 +351,20 @@ Agent Management
 Styling
 ---
 
+> `center(double x, double y)` <br>
+> Move the center of the view to the point `x,y`. To keep a particular agent in the center of the view, you can put 
+> ```c++
+> center(x(), y());
+> ```
+> in its `update()` method. 
+> See `examples/teleporter` for an example.
+> &#x246F; New in 1.6.
+
+> `zoom(double z)` <br>
+> Change the zoom level in the viewer. THe default is 1.0. 
+> See `examples/teleporter` for an example.
+> &#x246F; New in 1.6.
+
 > `void set_style(json style)` <br>
 > Change the agent's style, just as in the configuration file. 
 > Any valid svg styling will work.
@@ -452,8 +466,9 @@ The brower client relays mouse click, button press, and keyboard events to the e
 
 > Name: `connection`<br>
 > Event: Sent when a new client attaches to the enviro server.<br>
-> Value: An object with a string valued `id` field that should be unique to the client that has connected.
-> Note that this ID will be sent with all other events as well. &#x246E; New in 1.5
+> Value: An object with a string valued `client_id` field that should be unique to the client that has connected.
+> Note that this ID will be sent with all other events as well. &#x246E; New in 1.5. 
+> Note: In v1.6 the key changed from "id" to "client_id" so it would not conflict with the "id" field in the "agent_click" event.
 
 > Name: `screen_click`<br>
 > Event: Sent when a user clicks on the screen.<br>
@@ -488,7 +503,7 @@ To respond to events in your code, you should put elma watchers into the `init()
 ```c++
 void init() {
     watch("agent_click", (Event& e) => {
-        if ( e.value.id == id() ) {
+        if ( e.value()["id"] == id() ) {
             std::cout << "ouch!\n"; 
         }
     });

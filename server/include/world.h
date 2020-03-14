@@ -48,6 +48,12 @@ namespace enviro {
         void add_agent_type(std::string name, AGENT_TYPE * at);
         AGENT_TYPE * add_agent_type(json spec);
 
+        inline void set_center(double x, double y) { center_x = x; center_y = y; }
+        inline void set_zoom(double z) { zoom = z; }
+        inline double get_center_x() { return center_x; }
+        inline double get_center_y() { return center_y; }
+        inline double get_zoom() { return zoom; }
+
         private:
         map<std::string, AGENT_TYPE *> agent_types;
         vector<Agent *> agents, new_agents, garbage;
@@ -56,6 +62,7 @@ namespace enviro {
         json config;
         cpCollisionHandler * collsion_handler;
         Manager * manager_ptr;
+        double center_x, center_y, zoom;
 
         // A pin joint connecting agents with the given ids.
         typedef std::tuple<int, int, cpConstraint*> Constraint;

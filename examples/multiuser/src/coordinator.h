@@ -12,10 +12,12 @@ class CoordinatorController : public Process, public AgentInterface {
 
     void init() {
         watch("connection", [&](Event e) {
-            std::cout << "Connection from " << e.value()["id"] << "\n";
-            Agent& a = add_agent("Guy", 0, y, 0, {{"fill","gray"},{"stroke","black"}});
-            a.set_client_id(e.value()["id"]);
-            y += 50;
+            if ( ! e.value()["client_id"].is_null() ) {
+                std::cout << "Connection from " << e.value() << "\n";
+                Agent& a = add_agent("Guy", 0, y, 0, {{"fill","gray"},{"stroke","black"}});
+                a.set_client_id(e.value()["client_id"]);
+                y += 50;
+            }
         });
     }
     void start() {}

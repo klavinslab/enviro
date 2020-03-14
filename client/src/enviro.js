@@ -11,6 +11,10 @@ var CLIENT_ID;
 
 var HOST = window.location.href.substring(0, window.location.href.length - 1);
 
+var ZOOM = 1;
+var CX=0, CY=0;
+var CENTER_DEF = false;
+
 function generate_id(){
   // Source: https://gist.github.com/gordonbrander/2230317
   function chr4(){
@@ -18,7 +22,7 @@ function generate_id(){
   }
   return chr4() + chr4() +
     '-' + chr4() +
-    '-' + chr4() +
+    '-' + chr4() + 
     '-' + chr4() +
     '-' + chr4() + chr4() + chr4();
 }
@@ -54,7 +58,7 @@ class Sensor extends React.Component {
 
 function post_event(data) {
   let data_with_id = data;
-  data_with_id.id = CLIENT_ID;
+  data_with_id.client_id = CLIENT_ID;
   fetch(HOST+':8765/event', {
     method: "POST", 
     mode: 'no-cors',
@@ -72,12 +76,12 @@ class Agent extends React.Component {
     }
   }  
 
-  click(e) {
+  click(e) {      
     post_event({
       type: "agent_click",
       id: this.props.agent.id,
-      x: e.clientX - this.rect.left - this.rect.width/2,
-      y: e.clientY - this.rect.top - this.rect.height/2
+      x: (e.clientX - this.rect.left - this.rect.width/2)/ZOOM,
+      y: (e.clientY - this.rect.top - this.rect.height/2)/ZOOM
     });
     e.stopPropagation();
   }
@@ -124,16 +128,41 @@ class Arena extends React.Component {
 
   click(e) {
 
-    post_event({
+    let cx = CX - this.props.w/(2*ZOOM),
+        cy = CY - this.props.h/(2*ZOOM)
+
+    post_event({ 
        type: "screen_click",
-       x: e.clientX - this.rect.left - this.rect.width/2,
-       y: e.clientY - this.rect.top - this.rect.height/2
+       x: (e.clientX - this.rect.left - this.rect.width/2)/ZOOM - cx,
+       y: (e.clientY - this.rect.top - this.rect.height/2)/ZOOM - cy
     });
 
   }
 
+  dist(x1, y1, x2, y2) {
+    return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+  }
+
   render() {
-    let center = `translate(${this.props.w/2} ${this.props.h/2}) scale(1)`;
+
+    let zoom = this.props.data.zoom,
+        origin_x = this.props.w/(2*zoom),
+        origin_y = this.props.h/(2*zoom),
+        offset_x = this.props.data.center.x,
+        offset_y = this.props.data.center.y,
+        target_x = origin_x - offset_x,
+        target_y = origin_y - offset_y;
+        
+    if ( this.dist(CX,CY, target_x, target_y ) > 35 ) {
+        CX = target_x;
+        CY = target_y;
+    } else {
+        CX += 0.2 * (origin_x - offset_x - CX);
+        CY += 0.2 * (origin_y - offset_y - CY);
+    }
+
+    let center = `scale(${zoom}) translate(${CX} ${CY})`;
+
     return <svg width={this.props.w} 
                 height={this.props.h} 
                 onClick={e => this.click(e)}
@@ -142,13 +171,14 @@ class Arena extends React.Component {
         {this.props.data.agents.map(agent => <Agent agent={agent} key={agent.id} />)}
       </g>
     </svg>    
+
   }
+
 }
 
 class Taskbar extends React.Component {
 
   click(e, value) {
-
     post_event({
        type: "button_click",
        value: value
@@ -202,7 +232,6 @@ class Enviro extends React.Component {
       .then(res => res.json())
       .then(
         res => {
-          console.log("got config", res.config);
           this.setState({ mode: "connected", config: res.config }, () => {
             setTimeout(() => { this.update() } , 25);
           });
@@ -211,6 +240,7 @@ class Enviro extends React.Component {
           this.setState({ mode: "connecting", config: null, error: { message: "No connection" }}, () => {
             setTimeout(() => { this.update() } , 1000);
           });
+          CENTER_DEF = false;
         }
       )
   }
@@ -227,9 +257,14 @@ class Enviro extends React.Component {
           }, () => {
             setTimeout(() => { this.update() } , 25);
           });
+          if ( !CENTER_DEF ) {
+            CX = window.innerWidth/(2*result.zoom) - result.center.x;
+            CY = (window.innerWidth/2 - 41)/result.zoom - result.center.x;
+            CENTER_DEF = true;
+          }
+          ZOOM = result.zoom;
         },
         (error) => {
-          console.log(error);
           this.setState({
             mode: "connecting",
             error
@@ -270,8 +305,8 @@ class Enviro extends React.Component {
         metaKey: e.metaKey,
         repeat: e.repeat  
       });
-    });    
-
+    }); 
+    
   }
 
   render() {

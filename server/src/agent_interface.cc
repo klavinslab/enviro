@@ -8,12 +8,23 @@
       throw Exception(msg); \
 } 
 
+// Global
+void AgentInterface::center(double x, double y) {
+  ASSERT_AGENT_EXISTS("center");
+  agent->get_world_ptr()->set_center(x,y);
+}
+
+void AgentInterface::zoom(double z) {
+  ASSERT_AGENT_EXISTS("zoom");
+  agent->get_world_ptr()->set_zoom(z);
+}
+
+// State
 int AgentInterface::id() {
   ASSERT_AGENT_EXISTS("id");
   return agent->get_id();
 }
 
-// State
 cpVect AgentInterface::position() {
   ASSERT_AGENT_EXISTS("position");
   return agent->position();

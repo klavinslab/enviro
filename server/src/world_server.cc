@@ -36,7 +36,7 @@ namespace enviro {
             { "config", world.get_config() }
         };
 
-        json event_data = { {"id", req->getParameter(0) }};
+        json event_data = { {"client_id", req->getParameter(0) }};
         manager_mutex.lock(); ///////////////////////////////////////////////        
         world.emit(Event("connection", event_data));                       //
         manager_mutex.unlock(); /////////////////////////////////////////////  
@@ -49,19 +49,25 @@ namespace enviro {
     void WorldServer::get_state(uWS::HttpResponse<true> *res, uWS::HttpRequest *req) {
 
         json agent_list;
+        double cx, cy, z;
         
         manager_mutex.lock(); ///////////////////////////////////////////////        
         world.all([&](Agent& agent) {                                      //
             if ( agent.visible() ) {                                       //
                 agent_list.push_back(agent.serialize());                   //
             }                                                              //
+            cx = world.get_center_x();                                     //
+            cy = world.get_center_y();                                     //
+            z = world.get_zoom();                                          //
         });                                                                //
         manager_mutex.unlock(); /////////////////////////////////////////////
 
         json result = {
             { "result", "ok" },
             { "timestamp", unix_timestamp() },
-            { "agents", agent_list }
+            { "agents", agent_list },
+            { "center", { { "x", cx }, { "y", cy } } },
+            { "zoom", z }
         };
         
         res->writeHeader("Access-Control-Allow-Origin", "*");
