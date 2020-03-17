@@ -153,12 +153,12 @@ class Arena extends React.Component {
         target_x = origin_x - offset_x,
         target_y = origin_y - offset_y;
         
-    if ( this.dist(CX,CY, target_x, target_y ) > 35 ) {
+    if ( this.dist(CX,CY, target_x, target_y ) > 100 ) {
         CX = target_x;
         CY = target_y;
     } else {
-        CX += 0.2 * (origin_x - offset_x - CX);
-        CY += 0.2 * (origin_y - offset_y - CY);
+        CX += 0.075 * (origin_x - offset_x - CX);
+        CY += 0.075 * (origin_y - offset_y - CY);
     }
 
     let center = `scale(${zoom}) translate(${CX} ${CY})`;

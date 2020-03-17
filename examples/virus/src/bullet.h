@@ -11,20 +11,18 @@ class BulletController : public Process, public AgentInterface {
     BulletController() : Process(), AgentInterface(), counter(0) {}
 
     void init() {
-        notice_collisions_with("Virus", [&](Event &e) {
-            remove_agent(e.value()["id"]);
-            remove_agent(id());
-        });  
         notice_collisions_with("Cell", [&](Event &e) {
             remove_agent(id());
         });               
     }
+
     void start() {}
+
     void update() {
         if ( counter++ > 20 ) {
             remove_agent(id());
         }
-    }
+     }
     void stop() {}
 
     double counter;

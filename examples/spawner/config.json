@@ -1,0 +1,34 @@
+{
+
+    "name": "My Enviro Project",
+    "ip": "0.0.0.0",
+    "port": 8765,
+
+    "buttons": [],
+
+    "agents": [   
+        {
+            "definition": "defs/guy.json",
+            "style": { "fill": "azure", "stroke": "black" },
+            "position": { "x": 0, "y": -200, "theta": 0 }
+        }          
+    ],
+
+    "invisibles": [
+        {
+            "definition": "defs/coordinator.json",
+            "rendered": false
+        }   
+    ],    
+
+    "references": [
+        {
+            "definition": "defs/thing.json",
+            "style": { "fill": "azure", "stroke": "black" },
+            "position": { "x": 0, "y": 0, "theta": 0 }
+        }       
+    ],    
+
+    "statics": []
+
+}

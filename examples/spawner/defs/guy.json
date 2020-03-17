@@ -26,13 +26,7 @@
       "linear": 40,
       "rotational": 600
     },
-    "sensors": [
-      {
-        "type": "range",
-        "location": { "x": 17, "y": 0 },
-        "direction": 0
-     }
-    ],
+    "sensors": [],
     "mass": 1,    
     "controller": "lib/guy.so"
 }

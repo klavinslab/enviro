@@ -9,14 +9,8 @@
         {
             "definition": "defs/player.json",
             "style": { "fill": "#555", "stroke": "#888", "strokeWidth": "5px", "strokeOpacity": "0.25"},
-            "position": { "x": 400, "y": 200, "theta": 2 }
+            "position": { "x": 0, "y": 0, "theta": 2 }
         },
-        {
-            "definition": "defs/bullet.json",
-            "style": { "fill": "green", "stroke": "#888", "strokeWidth": "5px", "strokeOpacity": "0.25" },
-            "position": {"x": -400, "y": -200, "theta": 3.14 }
-        },
-
 
         {
             "definition": "defs/virus.json",
@@ -38,14 +32,7 @@
             "style": { "fill": "orange", "stroke": "black", "strokeWidth": "10px", "strokeOpacity": "0.25" },
             "position": { "x": -100, "y": -100, "theta": 0 }
         },    
-        
-        
-
-        {
-            "definition": "defs/cell.json",
-            "style": { "fill": "lightblue", "stroke": "#aaa", "strokeWidth": "10px", "strokeOpacity": "0.25" },
-            "position": { "x": 0, "y": 0, "theta": 0 }
-        },        
+      
         {
             "definition": "defs/cell.json",
             "style": { "fill": "lightblue", "stroke": "#aaa", "strokeWidth": "10px", "strokeOpacity": "0.25" },
@@ -78,6 +65,19 @@
         }  
         
         
+    ],
+
+    "references": [
+        {
+            "definition": "defs/bullet.json",
+            "style": { "fill": "green", "stroke": "#888", "strokeWidth": "2px", "strokeOpacity": "0.25" },
+            "position": {"x": -400, "y": -200, "theta": 0 }
+        },
+        {
+            "definition": "defs/virus_fragment.json",
+            "style": { "fill": "green", "stroke": "#888", "strokeWidth": "5px", "strokeOpacity": "0.25" },
+            "position": {"x": -400, "y": -200, "theta": 3.14 }
+        }
     ],
 
     "statics": []

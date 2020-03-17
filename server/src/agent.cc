@@ -22,7 +22,7 @@ namespace enviro {
         }
 
         if ( cpSpaceIsLocked(space) ) {
-            throw std::runtime_error("Cannot add shapes and bodies to space when it is updating");
+            throw std::runtime_error("Cannot add shapes and bodies to space when it is updating. Did you try to add an agent inside a collision callback.");
         }
 
         _id = _next_id++;

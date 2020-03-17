@@ -1,0 +1,19 @@
+{
+    "name": "VirusFragment",
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": [
+        { "x": 0, "y": 0 },
+        { "x": 10, "y": 0 },
+        { "x": 9.238795325112868, "y": 3.826834323650898 }, 
+        { "x": 7.0710678118654755, "y": 7.0710678118654755 }
+    ],
+    "friction": {
+      "collision": 1,
+      "linear": 10,
+      "rotational": 600
+    },
+    "sensors": [],
+    "mass": 0.125,    
+    "controller": "lib/virus_fragment.so"
+}

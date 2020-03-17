@@ -1,0 +1,6 @@
+{
+    "name": "Coordinator",
+    "type": "invisible",
+    "description": "Runs the whole show, but isn't rendered",  
+    "controller": "lib/coordinator.so"
+}

@@ -3,9 +3,10 @@
     "type": "dynamic",
     "description": "Replace this string with a description",
     "shape": [
-        { "x": -5, "y": 2 },
-        { "x": 5, "y": 0 },
-        { "x": -5, "y": -2 }
+        { "x": -2, "y": 2 },
+        { "x": -2, "y": -2 },
+        { "x": 2, "y": -2 },
+        { "x": 2, "y": 2 }        
     ],
     "friction": {
       "collision": 5,
